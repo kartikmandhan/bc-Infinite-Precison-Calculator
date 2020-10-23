@@ -13,12 +13,18 @@ enum state
     FINISH,
     ERROR
 };
-token getToken(char *expr, int reset)
+token getToken(char *expr, int *reset)
 {
     static int i = 0;
     static enum state currstate = SPACE;
     static enum state nextstate;
     char currentChar;
+    if (*reset == 1)
+    {
+        i = 0;
+        currstate = SPACE;
+        *reset = 0;
+    }
     token t;
     Number *new_number = (Number *)malloc(sizeof(Number));
     initNumber(new_number);
@@ -331,18 +337,21 @@ int precedence(char op)
         break;
     }
 }
-/*
-int infix(char *expression)
+
+Number *infix(char *expression)
 {
     char line[1024], ch, digit, prev_op, curr_op;
-    int i = 0, a, b, z, OBcount = 0, CBcount = 0;
+    int i = 0, a, b, z, reset = 1, OBcount = 0, CBcount = 0;
     istack operandStack;
     cstack operatorStack;
     cinit(&operatorStack);
     init(&operandStack);
-
-    while (line[i] != '\0')
+    Number *a = (Number *)malloc(sizeof(Number));
+    Number *b = (Number *)malloc(sizeof(Number));
+    Number *z = (Number *)malloc(sizeof(Number));
+    while (1)
     {
+        token t = getToken(expression, &reset);
         ch = line[i];
         if (isdigit(ch))
         {
@@ -358,8 +367,7 @@ int infix(char *expression)
                 CBcount++;
             if (CBcount > OBcount)
             {
-                printf("error\n");
-                exit(0);
+                return NULL;
             }
             if (!cisEmpty(operatorStack))
             {
@@ -476,8 +484,7 @@ int infix(char *expression)
                 if ((prev_op == '/' || prev_op == '%') && a == 0)
                 {
                     fprintf(stderr, "Mathematical error\n");
-                    printf("error\n");
-                    exit(0);
+                    return NULL;
                 }
                 switch (prev_op)
                 {
@@ -508,8 +515,7 @@ int infix(char *expression)
                     break;
 
                 default:
-                    printf("error\n");
-                    exit(0);
+                    return NULL;
                     break;
                 }
             }
@@ -518,8 +524,7 @@ int infix(char *expression)
         {
             fprintf(stderr, "Error in Expression\n");
             //return INT_MIN;
-            printf("error\n");
-            exit(0);
+            return NULL;
         }
         if (!isEmpty(operandStack))
         {
@@ -532,22 +537,20 @@ int infix(char *expression)
             else
             {
                 fprintf(stderr, "Less Operators\n");
-                printf("error\n");
-                exit(0);
+                return NULL;
             }
         }
         else
         {
             fprintf(stderr, "Less Operands\n");
 
-            printf("error\n");
-            exit(0);
+            return NULL;
         }
     }
 
     return 0;
 }
-*/
+/*
 int main()
 {
     token t;
@@ -570,3 +573,4 @@ int main()
         printf("\n");
     }
 }
+*/
