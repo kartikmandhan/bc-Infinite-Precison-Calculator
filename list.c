@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+Number *add(Number *n1, Number *n2);
 
 void initNumber(Number *n)
 {
@@ -67,6 +68,7 @@ void displayNumber(Number *num)
         printf("%d", p->num);
         p = p->next;
     }
+    printf("\n");
 }
 void insertAtBegining(Number *num, int no)
 {
@@ -91,7 +93,7 @@ void insertAtBegining(Number *num, int no)
         num->head = new_node;
     }
 }
-Number *makeBeforeDecimalEqual(Number *a, Number *b)
+Number *makeLengthEqual(Number *a, Number *b)
 {
     int diff = length(*a) - length(*b);
     if (diff > 0)
@@ -131,14 +133,132 @@ Number *makeDecimalEqual(Number *a, Number *b)
         }
     }
 }
+int compareEqual(Number a, Number b)
+{
+    makeLengthEqual(&a, &b);
+    makeDecimalEqual(&a, &b);
+    // if some error try swapping positions ofabove two functions
+    // 3.1234 3.12=>3.1234 003.1200
+    node *p, *q;
+    int len;
+    int i;
+    len = length(a);
+    p = a.head;
+    q = b.head;
+    for (i = 1; i <= len; i++)
+    {
+        if (p->num > q->num)
+            return 1; //i.e. Number a greater than Number b.
+        else if (p->num < q->num)
+            return -1; //i.e. a is less than b.
+        p = p->next;
+        q = q->next;
+    }
+    return 0; //i.e. both numbers are equal.
+}
 Number *sub(Number *n1, Number *n2)
 {
+    Number *ans = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    makeDecimalEqual(n1, n2);
+    makeLengthEqual(n1, n2);
+    if (n1->sign != n2->sign && n1->sign == MINUS)
+    {
+        // (-5) - (3)
+        n1->sign = PLUS;
+        ans = add(n1, n2);
+        ans->sign = MINUS;
+    }
+    else if (n1->sign != n2->sign && n2->sign == MINUS)
+    {
+        // 5 - (-3)
+        n2->sign = PLUS;
+        ans = add(n1, n2);
+        ans->sign = PLUS;
+    }
+    else if (n1->sign == n2->sign)
+    {
+        if (n1->sign == MINUS)
+        {
+            // -5 - (-3)=>3-5
+            n2->sign = n1->sign = PLUS;
+            ans = sub(n2, n1);
+        }
+        else if (n1->sign == PLUS)
+        {
+            int substraction, diff = 0, borrow = 0, dig_a, dig_b, len = length(*n1);
+            node *tail_a = n1->tail;
+            node *tail_b = n2->tail;
+            if (compareEqual(*n1, *n2) == 1)
+            {
+                // n1 is greater than n2
+                for (int i = 0; i < len; i++)
+                {
+                    dig_a = tail_a->num;
+                    dig_b = tail_b->num;
+                    dig_a -= borrow;
+                    if (dig_a >= dig_b)
+                    {
+                        diff = dig_a - dig_b;
+                        borrow = 0;
+                        insertAtBegining(ans, diff);
+                    }
+                    else
+                    {
+                        dig_a += 10;
+                        diff = dig_a - dig_b;
+                        borrow = 1;
+                        insertAtBegining(ans, diff);
+                    }
+                    tail_a = tail_a->prev;
+                    tail_b = tail_b->prev;
+                }
+            }
+            else if (compareEqual(*n1, *n2) == -1)
+            {
+                for (int i = 0; i < len; i++)
+                {
+                    dig_a = tail_a->num;
+                    dig_b = tail_b->num;
+                    dig_b -= borrow;
+                    if (dig_b >= dig_a)
+                    {
+                        diff = dig_b - dig_a;
+                        borrow = 0;
+                        insertAtBegining(ans, diff);
+                    }
+                    else
+                    {
+                        dig_b += 10;
+                        diff = dig_b - dig_a;
+                        borrow = 1;
+                        insertAtBegining(ans, diff);
+                    }
+                    tail_a = tail_a->prev;
+                    tail_b = tail_b->prev;
+                }
+                ans->sign = MINUS;
+            }
+            else
+            {
+                // both the numbers are equal
+                insertAtBegining(ans, 0);
+            }
+        }
+    }
+    ans->dec = n1->dec;
+    return ans;
 }
 
 Number *add(Number *n1, Number *n2)
 {
     Number *ans = (Number *)malloc(sizeof(Number));
     initNumber(ans);
+
+    // 3.1234
+    // 3.12
+    // then tail points to 4 and 2 respectively but we dont want to add them in addition
+    // hnce we make decimal equal by makeing 3.12 to 3.1200
     makeDecimalEqual(n1, n2);
     if (n1->sign != n2->sign && n1->sign == MINUS)
     {
@@ -154,7 +274,7 @@ Number *add(Number *n1, Number *n2)
     {
         int addition, sum = 0, carry = 0, len_a = length(*n1), len_b = length(*n2);
         node *tail_a = n1->tail;
-        node *tail_b = n1->tail;
+        node *tail_b = n2->tail;
 
         if (len_a >= len_b)
         {
@@ -207,5 +327,35 @@ Number *add(Number *n1, Number *n2)
         else
             ans->sign = PLUS;
     }
+    // free(n1);
     return ans;
+}
+
+int main()
+{
+    Number *n1, *n2, *n3;
+    n1 = (Number *)malloc(sizeof(Number));
+    n2 = (Number *)malloc(sizeof(Number));
+    n3 = (Number *)malloc(sizeof(Number));
+    initNumber(n1);
+    initNumber(n2);
+    initNumber(n3);
+    appendDigit(n1, '5');
+    appendDigit(n1, '4');
+    n2->sign = MINUS;
+    n1->sign = MINUS;
+    n1->dec = 3;
+    appendDigit(n1, '3');
+    appendDigit(n1, '3');
+    appendDigit(n1, '3');
+    appendDigit(n2, '2');
+    appendDigit(n2, '7');
+    appendDigit(n2, '5');
+    displayNumber(n1);
+    displayNumber(n2);
+    n3 = sub(n2, n1);
+    // displayNumber(n3);
+    // n3 = add(n1, n2);
+    displayNumber(n3);
+    // printf("%d\n", compareEqual(*n1, *n2));
 }
