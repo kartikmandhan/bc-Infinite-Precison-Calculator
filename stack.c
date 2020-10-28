@@ -38,7 +38,7 @@ void init(istack *s)
 {
     *s = NULL;
 }
-void push(istack *s, int d)
+void push(istack *s, Number *d)
 {
     inode *new_node = (inode *)malloc(sizeof(inode));
     if (new_node == NULL)
@@ -47,25 +47,25 @@ void push(istack *s, int d)
     new_node->next = *s;
     *s = new_node;
 }
-int pop(istack *s)
+Number *pop(istack *s)
 {
     if (!isEmpty(*s))
     {
         inode *p = *s;
-        char data = p->data;
+        Number *data = p->data;
         *s = p->next;
         free(p);
         return data;
     }
-    return INT_MIN;
+    return NULL;
 }
 int isEmpty(istack s)
 {
     return s == NULL;
 }
-int top(istack s)
+Number *top(istack s)
 {
     if (!isEmpty(s))
         return s->data;
-    return INT_MIN;
+    return NULL;
 }
