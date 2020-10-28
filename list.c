@@ -12,7 +12,7 @@ void initNumber(Number *n)
 }
 void appendDigit(Number *n, char ch)
 {
-    if (ch >= '0' && ch < '9')
+    if (ch >= '0' && ch <= '9')
     {
 
         node *new_node = (node *)malloc(sizeof(node));
@@ -331,6 +331,84 @@ Number *add(Number *n1, Number *n2)
     return ans;
 }
 
+int isNumber0(Number *n1)
+{
+    node *p = n1->head;
+    for (int i = 0; i < length(*n1); i++)
+    {
+        if (p->num != 0)
+        {
+            return 0;
+        }
+        p = p->next;
+    }
+    return 1;
+}
+Number *multiply(Number *n1, Number *n2)
+{
+    Number *ans = malloc(sizeof(Number));
+    initNumber(ans);
+
+    if (isNumber0(n1) || isNumber0(n2))
+    {
+        insertAtBegining(ans, 0);
+        return ans;
+    }
+    if (n1->sign == n2->sign)
+    {
+        ans->sign = PLUS;
+        n1->sign = n2->sign = PLUS;
+    }
+    else
+    {
+        ans->sign = MINUS;
+        n1->sign = n2->sign = PLUS;
+    }
+    int len_a = length(*n1);
+    int len_b = length(*n2);
+    int max_len = len_a > len_b ? 2 * len_a : 2 * len_b;
+    int i, j, p, q, multCarry, addCarry;
+    node *tail_n1, *tail_n2 = n2->tail;
+    int *tempMult = calloc(max_len, sizeof(int));
+
+    for (i = 0; i < len_b; i++)
+    {
+        tail_n1 = n1->tail;
+        addCarry = 0, multCarry = 0;
+        for (j = max_len - i - 1; j >= 0; j--)
+        {
+            if (tail_n1 && tail_n2)
+            {
+                p = tail_n1->num * tail_n2->num + multCarry;
+                tail_n1 = tail_n1->prev;
+                multCarry = p / 10;
+                p = p % 10;
+                q = p + addCarry + tempMult[j];
+                addCarry = q / 10;
+                q = q % 10;
+                tempMult[j] = q;
+            }
+            else
+            {
+                break;
+            }
+        }
+        tempMult[j] += addCarry + multCarry;
+        tail_n2 = tail_n2->prev;
+        // for (int i = 0; i < max_len; i++)
+        // {
+        //     printf("%d ", tempMult[i]);
+        // }
+        // printf("\n");
+    }
+    for (int i = max_len - 1; i >= 0; i--)
+    {
+        insertAtBegining(ans, tempMult[i]);
+    }
+    ans->dec = n1->dec + n2->dec;
+    return ans;
+}
+
 int main()
 {
     Number *n1, *n2, *n3;
@@ -340,22 +418,22 @@ int main()
     initNumber(n1);
     initNumber(n2);
     initNumber(n3);
-    appendDigit(n1, '5');
-    appendDigit(n1, '4');
-    n2->sign = MINUS;
-    n1->sign = MINUS;
-    n1->dec = 3;
-    appendDigit(n1, '3');
-    appendDigit(n1, '3');
-    appendDigit(n1, '3');
-    appendDigit(n2, '2');
-    appendDigit(n2, '7');
-    appendDigit(n2, '5');
+    appendDigit(n1, '9');
+    appendDigit(n1, '9');
+    // n2->sign = MINUS;
+    // n1->sign = MINUS;
+    appendDigit(n1, '9');
+    appendDigit(n1, '9');
+    appendDigit(n1, '9');
+    appendDigit(n2, '0');
+    appendDigit(n2, '9');
+    appendDigit(n2, '9');
     displayNumber(n1);
     displayNumber(n2);
-    n3 = sub(n2, n1);
-    // displayNumber(n3);
-    // n3 = add(n1, n2);
+    n3 = multiply(n2, n1);
     displayNumber(n3);
+    // n3 = add(n1, n2);
+    // displayNumber(n3);
+
     // printf("%d\n", compareEqual(*n1, *n2));
 }
