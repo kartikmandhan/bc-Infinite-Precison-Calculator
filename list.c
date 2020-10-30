@@ -52,17 +52,61 @@ int length(Number n)
     }
     return len;
 }
+void removeZeros(Number *n1)
+{
+    node *p = n1->head;
+    int i, len = length(*n1);
+    for (i = 0; i < len - n1->dec - 1; i++)
+    {
+        if (p->num == 0)
+        {
+            n1->head = p->next;
+            n1->head->prev = NULL;
+            free(p);
+            p = n1->head;
+        }
+        else
+        {
+            break;
+        }
+    }
+    p = n1->tail;
+    int decimal = n1->dec;
+    for (i = 0; i < decimal - 1; i++)
+    {
+        if (p->num == 0)
+        {
+            n1->tail = p->prev;
+            n1->tail->next = NULL;
+            free(p);
+            p = n1->tail;
+            n1->dec--;
+        }
+        else
+        {
+            break;
+        }
+    }
+    return;
+}
 void displayNumber(Number *num)
 {
+    removeZeros(num);
     node *p = num->head;
-    int len = length(*num);
-    int posDecimal = len - num->dec;
     if (num->sign == MINUS)
     {
         printf("-");
     }
-
-    for (int i = 0; i < len; i++)
+    int posDecimal = length(*num) - num->dec;
+    if (posDecimal < 0)
+    {
+        printf("0.");
+        for (int i = posDecimal; i < 0; i++)
+        {
+            printf("0");
+        }
+    }
+    for (int i = 0; i < length(*num); i++)
     {
         if (i == posDecimal)
             printf(".");
@@ -157,6 +201,7 @@ int compareEqual(Number a, Number b)
     }
     return 0; //i.e. both numbers are equal.
 }
+
 Number *sub(Number *n1, Number *n2)
 {
     Number *ans = (Number *)malloc(sizeof(Number));
@@ -409,6 +454,7 @@ Number *multiply(Number *n1, Number *n2)
     ans->dec = n1->dec + n2->dec;
     return ans;
 }
+
 Number *division(Number *n1, Number *n2)
 {
     if (isNumber0(n2))
@@ -416,8 +462,8 @@ Number *division(Number *n1, Number *n2)
         printf("Can't divide by 0\n");
         return NULL;
     }
-    // zeroRemov(n1);
-    // zeroRemov(n2);
+    removeZeros(n1);
+    removeZeros(n2);
     int k = n1->dec > n2->dec ? n1->dec : n2->dec;
     int i = 0;
     // remove decimal and append 0 eg
