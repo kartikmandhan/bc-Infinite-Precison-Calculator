@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+#define SCALE 31
 Number *add(Number *n1, Number *n2);
 
 void initNumber(Number *n)
@@ -408,7 +409,108 @@ Number *multiply(Number *n1, Number *n2)
     ans->dec = n1->dec + n2->dec;
     return ans;
 }
-
+Number *division(Number *n1, Number *n2)
+{
+    if (isNumber0(n2))
+    {
+        printf("Can't divide by 0\n");
+        return NULL;
+    }
+    // zeroRemov(n1);
+    // zeroRemov(n2);
+    int k = n1->dec > n2->dec ? n1->dec : n2->dec;
+    int i = 0;
+    // remove decimal and append 0 eg
+    // 3.144/22.1 =>3144/22100
+    while (i < k)
+    {
+        if (n1->dec > 0)
+            n1->dec--;
+        else
+            appendDigit(n1, '0');
+        if (n2->dec > 0)
+            n2->dec--;
+        else
+            appendDigit(n2, '0');
+        i++;
+    }
+    // displayNumber(n1);
+    // displayNumber(n2);
+    i = 9;
+    Number *c, *dividend, *tmpAns, *q, *pro;
+    c = (Number *)malloc(sizeof(Number));
+    dividend = (Number *)malloc(sizeof(Number));
+    tmpAns = (Number *)malloc(sizeof(Number));
+    pro = (Number *)malloc(sizeof(Number));
+    q = (Number *)malloc(sizeof(Number));
+    initNumber(tmpAns);
+    initNumber(c);
+    initNumber(q);
+    initNumber(dividend);
+    if (n1->sign == n2->sign)
+    {
+        q->sign = PLUS;
+        n1->sign = n2->sign = PLUS;
+    }
+    else
+    {
+        q->sign = MINUS;
+        n1->sign = n2->sign = PLUS;
+    }
+    node *p = n1->head;
+    char ch = p->num + '0';
+    appendDigit(dividend, ch);
+    while (q->dec < SCALE)
+    {
+        while (i >= 0)
+        {
+            insertAtBegining(c, i); //converting i from int to Number Datatype,so that we can directly use functions
+            pro = multiply(n2, c);
+            tmpAns = sub(dividend, pro);
+            if (tmpAns->sign != MINUS)
+            {
+                // printf("%d inside\n", i);
+                appendDigit(q, i + '0');
+                // delete c number to make it again assign to single digit and free up memory
+                node *tmp = c->head;
+                free(tmp);
+                c->head = c->tail = NULL;
+                break;
+            }
+            else
+            {
+                // delete c number to make it again assign to single digit and free up memory
+                node *tmp = c->head;
+                free(tmp);
+                c->head = c->tail = NULL;
+                i--;
+            }
+        }
+        dividend = tmpAns;
+        if (p->next != NULL)
+        {
+            // this part does bringing down next digit in division i.e 51/3=>2'1' brings 1 and append it to dividend
+            p = p->next;
+            ch = p->num + '0';
+            appendDigit(dividend, ch);
+        }
+        else
+        {
+            // add zeroes to end of dividend 10/11=>100/11 and increase count of decimal by 1
+            q->dec++;
+            // printf("%d\n", q->dec);
+            appendDigit(dividend, '0');
+        }
+        i = 9;
+        // delete c number to make it again assign to single digit and free up memory
+        node *tmp = c->head;
+        free(tmp);
+        c->head = c->tail = NULL;
+    }
+    q->dec--;
+    // makes count of decimal from 31 to 30(correct)
+    return q;
+}
 int main()
 {
     Number *n1, *n2, *n3;
@@ -418,19 +520,20 @@ int main()
     initNumber(n1);
     initNumber(n2);
     initNumber(n3);
-    appendDigit(n1, '9');
-    appendDigit(n1, '9');
-    // n2->sign = MINUS;
-    // n1->sign = MINUS;
-    appendDigit(n1, '9');
-    appendDigit(n1, '9');
-    appendDigit(n1, '9');
+    appendDigit(n1, '6');
+    appendDigit(n1, '3');
+    // n2->dec = 1;
+    // n1->dec = 3;
+    // appendDigit(n1, '4');
+    // appendDigit(n1, '3');
+    // appendDigit(n1, '8');
+    // appendDigit(n2, '8');
+    // appendDigit(n2, '9');
+    appendDigit(n2, '3');
     appendDigit(n2, '0');
-    appendDigit(n2, '9');
-    appendDigit(n2, '9');
     displayNumber(n1);
     displayNumber(n2);
-    n3 = multiply(n2, n1);
+    n3 = division(n1, n2);
     displayNumber(n3);
     // n3 = add(n1, n2);
     // displayNumber(n3);
