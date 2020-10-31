@@ -455,7 +455,7 @@ Number *multiply(Number *n1, Number *n2)
     return ans;
 }
 
-Number *division(Number *n1, Number *n2)
+Number *divide(Number *n1, Number *n2)
 {
     if (isNumber0(n2))
     {
@@ -557,6 +557,10 @@ Number *division(Number *n1, Number *n2)
     // makes count of decimal from 31 to 30(correct)
     return q;
 }
+Number *modulus(Number *n1, Number *n2)
+{
+}
+
 int main()
 {
     Number *n1, *n2, *n3;

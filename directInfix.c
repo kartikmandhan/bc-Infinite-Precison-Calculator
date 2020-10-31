@@ -340,25 +340,31 @@ int precedence(char op)
 
 Number *infix(char *expression)
 {
-    char line[1024], ch, digit, prev_op, curr_op;
-    int i = 0, a, b, z, reset = 1, OBcount = 0, CBcount = 0;
+    char ch, digit, prev_op, curr_op;
+    int i = 0, reset = 1, OBcount = 0, CBcount = 0, prev, curr;
     istack operandStack;
     cstack operatorStack;
     cinit(&operatorStack);
     init(&operandStack);
     Number *a = (Number *)malloc(sizeof(Number));
     Number *b = (Number *)malloc(sizeof(Number));
-    Number *z = (Number *)malloc(sizeof(Number));
+    Number *answer = (Number *)malloc(sizeof(Number));
+
     while (1)
     {
         token t = getToken(expression, &reset);
-        ch = line[i];
-        if (isdigit(ch))
+        curr = t.type;
+        if (curr = OPERAND && prev == OPERAND)
         {
-            digit = ch - '0';
+            // there is some error
+            return NULL;
+        }
+
+        if (t.type = OPERAND)
+        {
             push(&operandStack, digit);
         }
-        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '%' || ch == ')' || ch == '(')
+        else if (t.type == OPERATOR)
         {
             curr_op = ch;
             if (curr_op == '(')
@@ -397,44 +403,42 @@ Number *infix(char *expression)
                     }
                     if ((prev_op == '/' || prev_op == '%') && a == 0)
                     {
-                        fprintf(stderr, "Mathematical error\n");
-                        printf("error\n");
-                        exit(0);
+                        printf("Mathematical error\n");
+                        return NULL;
                     }
                     switch (prev_op)
                     {
                     case '+':
-                        z = b + a;
-                        // z = add(a, b);
-                        push(&operandStack, z);
+                        // answer = b + a;
+                        answer = add(a, b);
+                        push(&operandStack, answer);
                         break;
                     case '-':
-                        z = b - a;
-                        // z = sub(b, a);
-                        push(&operandStack, z);
+                        // answer = b - a;
+                        answer = sub(b, a);
+                        push(&operandStack, answer);
                         break;
                     case '*':
-                        z = b * a;
-                        push(&operandStack, z);
-                        // z = mult(b, a);
+                        // answer = b * a;
+                        answer = multiply(b, a);
+                        push(&operandStack, answer);
                         break;
                     case '/':
-                        z = b / a;
-                        push(&operandStack, z);
-                        // z = division(b, a);
+                        // answer = b / a;
+                        answer = divide(b, a);
+                        push(&operandStack, answer);
                         break;
                     case '%':
-                        z = b % a;
-                        push(&operandStack, z);
-                        // z = modulus(b, a);
+                        // answer = b % a;
+                        answer = modulus(b, a);
+                        push(&operandStack, answer);
                         break;
                     case '(':
                         cpush(&operatorStack, prev_op);
                         push(&operandStack, b);
                         push(&operandStack, a);
                     default:
-                        printf("error\n");
-                        exit(0);
+                        return NULL;
                         break;
                     }
                     if (prev_op == '(')
@@ -455,100 +459,103 @@ Number *infix(char *expression)
                 OBcount--;
             }
         }
-        i++;
-    }
-    if (line[i] == '\0')
-    {
-
-        if (CBcount == OBcount)
+        else if (t.type == END)
         {
-            while (!cisEmpty(operatorStack))
+
+            if (CBcount == OBcount)
             {
-                if (!isEmpty(operandStack))
+                while (!cisEmpty(operatorStack))
                 {
-                    a = pop(&operandStack);
-                }
-                else
-                {
-                    fprintf(stderr, "less operands");
-                }
-                if (!isEmpty(operandStack))
-                {
-                    b = pop(&operandStack);
-                }
-                else
-                {
-                    fprintf(stderr, "less operands");
-                }
-                prev_op = cpop(&operatorStack);
-                if ((prev_op == '/' || prev_op == '%') && a == 0)
-                {
-                    fprintf(stderr, "Mathematical error\n");
-                    return NULL;
-                }
-                switch (prev_op)
-                {
-                case '+':
-                    z = b + a;
-                    // z = add(a, b);
-                    push(&operandStack, z);
-                    break;
-                case '-':
-                    z = b - a;
-                    // z = sub(b, a);
-                    push(&operandStack, z);
-                    break;
-                case '*':
-                    z = b * a;
-                    push(&operandStack, z);
-                    // z = mult(b, a);
-                    break;
-                case '/':
-                    z = b / a;
-                    push(&operandStack, z);
-                    // z = division(b, a);
-                    break;
-                case '%':
-                    z = b % a;
-                    push(&operandStack, z);
-                    // z = modulus(b, a);
-                    break;
+                    if (!isEmpty(operandStack))
+                    {
+                        a = pop(&operandStack);
+                    }
+                    else
+                    {
+                        printf("less operands");
+                        return NULL;
+                    }
+                    if (!isEmpty(operandStack))
+                    {
+                        b = pop(&operandStack);
+                    }
+                    else
+                    {
+                        printf("less operands");
+                        return NULL;
+                    }
+                    prev_op = cpop(&operatorStack);
+                    if ((prev_op == '/' || prev_op == '%') && a == 0)
+                    {
+                        printf("Mathematical error\n");
+                        return NULL;
+                    }
+                    switch (prev_op)
+                    {
+                    case '+':
+                        // answer = b + a;
+                        answer = add(a, b);
+                        push(&operandStack, answer);
+                        break;
+                    case '-':
+                        // answer = b - a;
+                        answer = sub(b, a);
+                        push(&operandStack, answer);
+                        break;
+                    case '*':
+                        // answer = b * a;
+                        answer = multiply(b, a);
+                        push(&operandStack, answer);
+                        break;
+                    case '/':
+                        // answer = b / a;
+                        answer = divide(b, a);
+                        push(&operandStack, answer);
+                        break;
+                    case '%':
+                        // answer = b % a;
+                        answer = modulus(b, a);
+                        push(&operandStack, answer);
+                        break;
 
-                default:
-                    return NULL;
-                    break;
+                    default:
+                        return NULL;
+                        break;
+                    }
                 }
-            }
-        }
-        else
-        {
-            fprintf(stderr, "Error in Expression\n");
-            //return INT_MIN;
-            return NULL;
-        }
-        if (!isEmpty(operandStack))
-        {
-            z = pop(&operandStack);
-            if (isEmpty(operandStack))
-            {
-
-                printf("Result:%d\n", z);
             }
             else
             {
-                fprintf(stderr, "Less Operators\n");
+                printf("Error in Expression\n");
+                //return INT_MIN;
+                return NULL;
+            }
+            if (!isEmpty(operandStack))
+            {
+                answer = pop(&operandStack);
+                if (isEmpty(operandStack))
+                {
+                    return answer;
+                    // printf("Result:%d\n", answer);
+                }
+                else
+                {
+                    printf("Less Operators\n");
+                    return NULL;
+                }
+            }
+            else
+            {
+                printf("Less Operands\n");
                 return NULL;
             }
         }
-        else
+        else if (t.type == ERR)
         {
-            fprintf(stderr, "Less Operands\n");
-
             return NULL;
         }
+        prev = curr;
     }
-
-    return 0;
 }
 /*
 int main()
