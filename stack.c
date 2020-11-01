@@ -1,4 +1,6 @@
 #include "stack.h"
+#include <stdio.h>
+#include <stdlib.h>
 void cinit(cstack *s)
 {
     *s = NULL;

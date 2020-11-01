@@ -11,5 +11,7 @@ typedef struct token
 #define OPERATOR 20
 #define END 30
 #define ERR 40
-
+token getToken(char *expr, int *reset);
+int precedence(char op);
+Number *infix(char *expression);
 #endif

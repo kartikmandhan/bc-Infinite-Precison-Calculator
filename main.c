@@ -2,7 +2,6 @@
 #include <string.h>
 // function reads and returns length of the string that it read.
 #include "infix.h"
-token getToken(char *expr, int reset);
 int readline(char *line, int len)
 {
     int i;
