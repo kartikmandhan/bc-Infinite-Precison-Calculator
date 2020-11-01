@@ -23,9 +23,9 @@ token getToken(char *expr, int *reset)
     char currentChar;
     if (*reset == 1)
     {
-        i = 0;
         currstate = SPACE;
         *reset = 0;
+        i = 0;
     }
     token t;
     Number *new_number = (Number *)malloc(sizeof(Number));
@@ -348,27 +348,30 @@ Number *infix(char *expression)
     cstack operatorStack;
     cinit(&operatorStack);
     init(&operandStack);
+    token t;
     Number *a = (Number *)malloc(sizeof(Number));
     Number *b = (Number *)malloc(sizeof(Number));
     Number *answer = (Number *)malloc(sizeof(Number));
-
+    prev = ERR;
     while (1)
+    // for (int i = 0; i < 5; i++)
     {
-        token t = getToken(expression, &reset);
+        t = getToken(expression, &reset);
+
         curr = t.type;
-        if (curr = OPERAND && prev == OPERAND)
+        if (curr == OPERAND && prev == OPERAND)
         {
             // there is some error
             return NULL;
         }
-
-        if (t.type = OPERAND)
+        if (t.type == OPERAND)
         {
             push(&operandStack, t.num);
         }
         else if (t.type == OPERATOR)
         {
-            curr_op = ch;
+
+            curr_op = t.op;
             if (curr_op == '(')
                 OBcount++;
             if (curr_op == ')')
@@ -380,8 +383,9 @@ Number *infix(char *expression)
             if (!cisEmpty(operatorStack))
             {
                 prev_op = ctop(operatorStack);
+
                 // for starting situation we dont hav prev_op,hence if stack is empty then dont do all this
-                while (precedence(prev_op) >= precedence(curr_op))
+                while (precedence(curr_op) <= precedence(prev_op))
                 {
                     prev_op = cpop(&operatorStack);
                     if (!isEmpty(operandStack))
@@ -452,6 +456,7 @@ Number *infix(char *expression)
                 }
             }
             cpush(&operatorStack, curr_op);
+
             if (curr_op == ')')
             {
                 // pop opening and closing brackets from stack
@@ -463,11 +468,11 @@ Number *infix(char *expression)
         }
         else if (t.type == END)
         {
-
             if (CBcount == OBcount)
             {
                 while (!cisEmpty(operatorStack))
                 {
+
                     if (!isEmpty(operandStack))
                     {
                         a = pop(&operandStack);
@@ -487,6 +492,7 @@ Number *infix(char *expression)
                         return NULL;
                     }
                     prev_op = cpop(&operatorStack);
+
                     if ((prev_op == '/' || prev_op == '%') && a == 0)
                     {
                         printf("Mathematical error\n");
@@ -496,6 +502,7 @@ Number *infix(char *expression)
                     {
                     case '+':
                         // answer = b + a;
+
                         answer = add(a, b);
                         push(&operandStack, answer);
                         break;
@@ -521,6 +528,7 @@ Number *infix(char *expression)
                         break;
 
                     default:
+
                         return NULL;
                         break;
                     }

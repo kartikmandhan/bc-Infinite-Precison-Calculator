@@ -63,19 +63,28 @@ int main()
 {
     printf("This project is inspired from the bc command line calculator in Linux\n");
     printf("It is free to use software with no WARANTY\n");
-    char line[1024];
+    char line[1024] = "3+4";
+    Number *result;
     readline(line, 1024);
-    token t;
+    insertZeroAfterBrac(line);
+    // printf("%s", line);
+    result = infix(line);
+    if (result != NULL)
+        displayNumber(result);
+    else
+        printf("Error in expression\n");
+    // displayNumber(result);
+    // token t;
     // while (t.type != END)
     // {
-    t = getToken(line, 0);
+    //     t = getToken(line, 0);
 
-    printf("%d ", t.type);
-    if (t.type == OPERATOR)
-        printf("%c", t.op);
-    else if (t.type == OPERAND)
-        displayNumber(t.num);
+    //     printf("%d ", t.type);
+    //     if (t.type == OPERATOR)
+    //         printf("%c", t.op);
+    //     else if (t.type == OPERAND)
+    //         displayNumber(t.num);
 
-    printf("\n");
+    //     printf("\n");
     // }
 }
