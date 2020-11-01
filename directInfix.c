@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "stack.h"
+#include "list.h"
 #include "infix.h"
 #include <stdio.h>
 #include <ctype.h>
@@ -362,7 +364,7 @@ Number *infix(char *expression)
 
         if (t.type = OPERAND)
         {
-            push(&operandStack, digit);
+            push(&operandStack, t.num);
         }
         else if (t.type == OPERATOR)
         {

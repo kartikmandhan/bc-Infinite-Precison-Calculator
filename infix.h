@@ -1,3 +1,5 @@
+#ifndef INFIX_H_
+#define INFIX_H_
 #include "list.h"
 typedef struct token
 {
@@ -9,3 +11,5 @@ typedef struct token
 #define OPERATOR 20
 #define END 30
 #define ERR 40
+
+#endif

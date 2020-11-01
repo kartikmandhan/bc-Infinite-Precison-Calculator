@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "list.h"
 #define SCALE 31
-Number *add(Number *n1, Number *n2);
 
 void initNumber(Number *n)
 {
@@ -652,34 +651,34 @@ Number *modulus(Number *n1, Number *n2)
     }
 }
 
-int main()
-{
-    Number *n1, *n2, *n3;
-    n1 = (Number *)malloc(sizeof(Number));
-    n2 = (Number *)malloc(sizeof(Number));
-    n3 = (Number *)malloc(sizeof(Number));
-    initNumber(n1);
-    initNumber(n2);
-    initNumber(n3);
-    appendDigit(n1, '9');
-    appendDigit(n1, '7');
-    appendDigit(n1, '5');
-    appendDigit(n1, '4');
-    // n1->dec = 1;
-    n1->dec = 6;
-    // appendDigit(n1, '4');
-    // appendDigit(n1, '3');
-    // appendDigit(n1, '8');
-    // appendDigit(n2, '8');
-    // appendDigit(n2, '9');
-    appendDigit(n2, '2');
-    appendDigit(n2, '3');
-    displayNumber(n1);
-    displayNumber(n2);
-    n3 = modulus(n1, n2);
-    displayNumber(n3);
-    // n3 = add(n1, n2);
-    // displayNumber(n3);
+// int main()
+// {
+//     Number *n1, *n2, *n3;
+//     n1 = (Number *)malloc(sizeof(Number));
+//     n2 = (Number *)malloc(sizeof(Number));
+//     n3 = (Number *)malloc(sizeof(Number));
+//     initNumber(n1);
+//     initNumber(n2);
+//     initNumber(n3);
+//     appendDigit(n1, '9');
+//     appendDigit(n1, '7');
+//     appendDigit(n1, '5');
+//     appendDigit(n1, '4');
+//     // n1->dec = 1;
+//     n1->dec = 6;
+//     // appendDigit(n1, '4');
+//     // appendDigit(n1, '3');
+//     // appendDigit(n1, '8');
+//     // appendDigit(n2, '8');
+//     // appendDigit(n2, '9');
+//     appendDigit(n2, '2');
+//     appendDigit(n2, '3');
+//     displayNumber(n1);
+//     displayNumber(n2);
+//     n3 = modulus(n1, n2);
+//     displayNumber(n3);
+//     // n3 = add(n1, n2);
+//     // displayNumber(n3);
 
-    // printf("%d\n", compareEqual(*n1, *n2));
-}
+//     // printf("%d\n", compareEqual(*n1, *n2));
+// }

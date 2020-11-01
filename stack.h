@@ -1,7 +1,8 @@
-#include <stdio.h>
+#ifndef STACK_H_
+#define STACK_H_
+
 #include "list.h"
-#include <limits.h>
-#include <stdlib.h>
+
 typedef struct cnode
 {
     char ch;
@@ -25,3 +26,4 @@ void push(istack *s, Number *d);
 Number *pop(istack *s);
 int isEmpty(istack s);
 Number *top(istack s);
+#endif
