@@ -479,7 +479,7 @@ Number *infix(char *expression)
                     }
                     else
                     {
-                        printf("less operands");
+                        printf("Less operands\n");
                         return NULL;
                     }
                     if (!isEmpty(operandStack))
@@ -488,7 +488,7 @@ Number *infix(char *expression)
                     }
                     else
                     {
-                        printf("less operands");
+                        printf("Less operands\n");
                         return NULL;
                     }
                     prev_op = cpop(&operatorStack);
@@ -556,7 +556,7 @@ Number *infix(char *expression)
             }
             else
             {
-                printf("Less Operands\n");
+                printf("Less operands\n\n\n");
                 return NULL;
             }
         }

@@ -2,6 +2,8 @@
 #include <string.h>
 // function reads and returns length of the string that it read.
 #include "infix.h"
+
+#define LINE_LEN 1024
 int readline(char *line, int len)
 {
     int i;
@@ -21,19 +23,30 @@ int readline(char *line, int len)
     line[len - 1] = '\0';
     return len - 1;
 }
-void insertZeroAfterBrac(char *line)
+void insert0AtStartAndAfterBrac(char *line)
 {
     // bracket related code
-    // 	(    +8   - 6)
+    // 	(    +8   - 6) =>
     // (    0+8   - 6)
-    // (          -8 + 8)
+    // (          -8 + 8) =>
     // (          0-8 + 8)
-    int i;
+    int i = 0, j = 0, temp;
+    if ((line[0] == '-') || (line[0] == '+'))
+    {
+        temp = strlen(line);
+        while (temp >= 0)
+        {
+            // moving each character 1 place forward
+            line[temp + 1] = line[temp];
+            temp--;
+        }
+        line[0] = '0';
+    }
     for (i = 0; i < strlen(line); i++)
     {
         if (line[i] == '(')
         {
-            int j = 1;
+            j = 1;
 
             while (1)
             {
@@ -63,28 +76,16 @@ int main()
 {
     printf("This project is inspired from the bc command line calculator in Linux\n");
     printf("It is free to use software with no WARANTY\n");
-    char line[1024] = "3+4";
+    char line[LINE_LEN];
     Number *result;
-    readline(line, 1024);
-    insertZeroAfterBrac(line);
-    // printf("%s", line);
-    result = infix(line);
-    if (result != NULL)
-        displayNumber(result);
-    else
-        printf("Error in expression\n");
-    // displayNumber(result);
-    // token t;
-    // while (t.type != END)
-    // {
-    //     t = getToken(line, 0);
-
-    //     printf("%d ", t.type);
-    //     if (t.type == OPERATOR)
-    //         printf("%c", t.op);
-    //     else if (t.type == OPERAND)
-    //         displayNumber(t.num);
-
-    //     printf("\n");
-    // }
+    while (readline(line, LINE_LEN))
+    {
+        insert0AtStartAndAfterBrac(line);
+        // printf("%s", line);
+        result = infix(line);
+        if (result != NULL)
+            displayNumber(result);
+        else
+            printf("Incorrect expression\n");
+    }
 }
