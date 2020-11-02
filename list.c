@@ -127,7 +127,7 @@ void insertAtBegining(Number *num, int no)
         new_node->prev = NULL;
         if (num->head == NULL && num->tail == NULL)
         {
-            new_node->prev = NULL;
+            new_node->next = NULL;
             num->head = new_node;
             num->tail = new_node;
             return;
@@ -291,7 +291,6 @@ Number *sub(Number *n1, Number *n2)
             }
         }
     }
-    ans->dec = n1->dec;
     return ans;
 }
 
@@ -490,6 +489,7 @@ Number *divide(Number *n1, Number *n2)
     initNumber(c);
     initNumber(q);
     initNumber(dividend);
+    initNumber(pro);
     if (n1->sign == n2->sign)
     {
         q->sign = PLUS;
@@ -590,6 +590,7 @@ Number *modulus(Number *n1, Number *n2)
     initNumber(c);
     initNumber(q);
     initNumber(dividend);
+    initNumber(pro);
     if (n1->sign == n2->sign)
     {
         q->sign = PLUS;
@@ -651,34 +652,87 @@ Number *modulus(Number *n1, Number *n2)
     }
 }
 
-// int main()
-// {
-//     Number *n1, *n2, *n3;
-//     n1 = (Number *)malloc(sizeof(Number));
-//     n2 = (Number *)malloc(sizeof(Number));
-//     n3 = (Number *)malloc(sizeof(Number));
-//     initNumber(n1);
-//     initNumber(n2);
-//     initNumber(n3);
-//     appendDigit(n1, '9');
-//     appendDigit(n1, '7');
-//     appendDigit(n1, '5');
-//     appendDigit(n1, '4');
-//     // n1->dec = 1;
-//     n1->dec = 6;
-//     // appendDigit(n1, '4');
-//     // appendDigit(n1, '3');
-//     // appendDigit(n1, '8');
-//     // appendDigit(n2, '8');
-//     // appendDigit(n2, '9');
-//     appendDigit(n2, '2');
-//     appendDigit(n2, '3');
-//     displayNumber(n1);
-//     displayNumber(n2);
-//     n3 = modulus(n1, n2);
-//     displayNumber(n3);
-//     // n3 = add(n1, n2);
-//     // displayNumber(n3);
+Number *power(Number *n1, Number *n2)
+{
 
-//     // printf("%d\n", compareEqual(*n1, *n2));
-// }
+    Number *ans = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    Number *one = (Number *)malloc(sizeof(Number));
+    initNumber(one);
+    insertAtBegining(one, 1);
+    int reciprocate = 0;
+    node *b = n2->tail;
+    if (n1->sign == PLUS && n2->sign == MINUS)
+    {
+        n2->sign = PLUS;
+        reciprocate = 1;
+    }
+    else if (n1->sign == MINUS)
+    {
+        if (b->num % 2 == 0)
+        {
+            ans->sign = PLUS;
+        }
+        else
+        {
+            ans->sign = MINUS;
+        }
+        n1->sign = PLUS;
+        if (n2->sign == MINUS)
+        {
+            reciprocate = 1;
+            n2->sign = PLUS;
+        }
+    }
+    n2 = sub(n2, one);
+    // displayNumber(n2);
+    while (!isNumber0(n2))
+    {
+        ans = multiply(n1, n1);
+        // displayNumber(ans);
+        n2 = sub(n2, one);
+    }
+    if (reciprocate)
+    {
+        ans = divide(one, ans);
+    }
+
+    return ans;
+}
+
+int main()
+{
+    Number *n1, *n2, *n3;
+    n1 = (Number *)malloc(sizeof(Number));
+    n2 = (Number *)malloc(sizeof(Number));
+    n3 = (Number *)malloc(sizeof(Number));
+    initNumber(n1);
+    initNumber(n2);
+    initNumber(n3);
+    insertAtBegining(n1, 9);
+    // appendDigit(n1, '0');
+    // appendDigit(n1, '5');
+    // appendDigit(n1, '4');
+    // n1->dec = 1;
+    // n1->dec = 6;
+    appendDigit(n2, '2');
+    // appendDigit(n2, '0');
+    // appendDigit(n1, '3');
+    // appendDigit(n1, '8');
+    // appendDigit(n2, '8');
+    // appendDigit(n2, '9');
+    // appendDigit(n2, '2');
+    // appendDigit(n2, '3');
+    // displayNumber(n1);
+    displayNumber(n1);
+    displayNumber(n2);
+    n3 = power(n1, n2);
+    displayNumber(n3);
+    // printf("%d", length(*n1));
+
+    // displayNumber(n3);
+    // n3 = add(n1, n2);
+    // displayNumber(n3);
+
+    // printf("%d\n", compareEqual(*n1, *n2));
+}
