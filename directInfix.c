@@ -19,7 +19,7 @@ token getToken(char *expr, int *reset)
 {
     static int i = 0;
     static enum state currstate = SPACE;
-    static enum state nextstate;
+    enum state nextstate;
     char currentChar;
     if (*reset == 1)
     {
@@ -349,8 +349,8 @@ int precedence(char op)
 
 Number *infix(char *expression)
 {
-    char ch, digit, prev_op, curr_op;
-    int i = 0, reset = 1, OBcount = 0, CBcount = 0, prev, curr;
+    char ch, prev_op, curr_op;
+    int reset = 1, OBcount = 0, CBcount = 0, prev, curr;
     istack operandStack;
     cstack operatorStack;
     cinit(&operatorStack);
@@ -359,23 +359,26 @@ Number *infix(char *expression)
     Number *a = (Number *)malloc(sizeof(Number));
     Number *b = (Number *)malloc(sizeof(Number));
     Number *answer = (Number *)malloc(sizeof(Number));
+    initNumber(a);
+    initNumber(b);
+    initNumber(answer);
     prev = ERR;
     while (1)
     // for (int i = 0; i < 5; i++)
     {
         t = getToken(expression, &reset);
-
         curr = t.type;
         if (curr == OPERAND && prev == OPERAND)
         {
             // there is some error
             return NULL;
         }
-        if (t.type == OPERAND)
+        if (curr == OPERAND)
         {
+            // printf("%d", t.num->head->num);
             push(&operandStack, t.num);
         }
-        else if (t.type == OPERATOR)
+        else if (curr == OPERATOR)
         {
 
             curr_op = t.op;
@@ -385,12 +388,12 @@ Number *infix(char *expression)
                 CBcount++;
             if (CBcount > OBcount)
             {
+                printf("Unblanced paranthesis");
                 return NULL;
             }
             if (!cisEmpty(operatorStack))
             {
                 prev_op = ctop(operatorStack);
-
                 // for starting situation we dont hav prev_op,hence if stack is empty then dont do all this
                 while (precedence(curr_op) <= precedence(prev_op))
                 {
@@ -452,10 +455,13 @@ Number *infix(char *expression)
                         push(&operandStack, answer);
                         break;
                     case '(':
+                        // (-7)+(-3),in this case ( comes as an operator
                         cpush(&operatorStack, prev_op);
                         push(&operandStack, b);
                         push(&operandStack, a);
+                        break;
                     default:
+                        printf("Invalid Operator\n");
                         return NULL;
                         break;
                     }
@@ -503,14 +509,14 @@ Number *infix(char *expression)
                         printf("Less operands\n");
                         return NULL;
                     }
-                    prev_op = cpop(&operatorStack);
+                    ch = cpop(&operatorStack);
 
-                    if ((prev_op == '/' || prev_op == '%') && a == 0)
+                    if ((ch == '/' || ch == '%') && a == 0)
                     {
                         printf("Mathematical error\n");
                         return NULL;
                     }
-                    switch (prev_op)
+                    switch (ch)
                     {
                     case '+':
                         // answer = b + a;
@@ -543,9 +549,8 @@ Number *infix(char *expression)
                         answer = power(b, a);
                         push(&operandStack, answer);
                         break;
-
                     default:
-
+                        printf("Invalid Operator\n");
                         return NULL;
                         break;
                     }
@@ -573,7 +578,7 @@ Number *infix(char *expression)
             }
             else
             {
-                printf("Less operands\n\n\n");
+                printf("Less operands\n");
                 return NULL;
             }
         }

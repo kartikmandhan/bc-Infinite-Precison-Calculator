@@ -1,11 +1,11 @@
-project: infix.o istack.o list.o functions.o main.o
-	cc infix.o istack.o list.o functions.o -lm -o project
-functions.o: functions.c list.h functions.h
-	cc -c functions.c -Wall
-infix.o: infix.c istack.h functions.h
-	cc -c infix.c -Wall
-istack.o: istack.c istack.h
-	cc -c istack.c -Wall
-list.o: list.c list.h
-	cc -c list.c -Wall
+project: directInfix.o stack.o list.o  main.o
+	gcc directInfix.o stack.o list.o main.o -o project
 
+directInfix.o: directInfix.c stack.h 
+	gcc -c directInfix.c -Wall
+stack.o: stack.c stack.h
+	gcc -c stack.c -Wall
+list.o: list.c list.h
+	gcc -c list.c -Wall
+main.o: main.c
+	gcc -c main.c -Wall
