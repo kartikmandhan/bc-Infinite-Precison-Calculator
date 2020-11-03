@@ -514,7 +514,7 @@ Number *divide(Number *n1, Number *n2)
             {
                 // printf("%d inside\n", i);
                 appendDigit(q, i + '0');
-                // delete c number to make it again assign to single digit and free up memory
+                // delete c Number to make it again assign to single digit and free up memory
                 node *tmp = c->head;
                 free(tmp);
                 c->head = c->tail = NULL;
@@ -522,7 +522,7 @@ Number *divide(Number *n1, Number *n2)
             }
             else
             {
-                // delete c number to make it again assign to single digit and free up memory
+                // delete c Number to make it again assign to single digit and free up memory
                 node *tmp = c->head;
                 free(tmp);
                 c->head = c->tail = NULL;
@@ -532,7 +532,7 @@ Number *divide(Number *n1, Number *n2)
         dividend = tmpAns;
         if (p->next != NULL)
         {
-            // this part does bringing down next digit in division i.e 51/3=>2'1' brings 1 and append it to dividend
+            // this part does bringing down next digit in divide i.e 51/3=>2'1' brings 1 and append it to dividend
             p = p->next;
             ch = p->num + '0';
             appendDigit(dividend, ch);
@@ -545,7 +545,7 @@ Number *divide(Number *n1, Number *n2)
             appendDigit(dividend, '0');
         }
         i = 9;
-        // delete c number to make it again assign to single digit and free up memory
+        // delete c Number to make it again assign to single digit and free up memory
         node *tmp = c->head;
         free(tmp);
         c->head = c->tail = NULL;
@@ -553,6 +553,102 @@ Number *divide(Number *n1, Number *n2)
     q->dec--;
     // makes count of decimal from 31 to 30(correct)
     return q;
+}
+Number *floordivide(Number *n1, Number *n2)
+{
+    if (isNumber0(n2))
+    {
+        printf("Can't divide by 0\n");
+        return NULL;
+    }
+    removeZeros(n1);
+    removeZeros(n2);
+    int k = n1->dec > n2->dec ? n1->dec : n2->dec;
+    int i = 0;
+    // remove decimal and append 0 eg
+    // 3.144/22.1 =>3144/22100
+    while (i < k)
+    {
+        if (n1->dec > 0)
+            n1->dec--;
+        else
+            appendDigit(n1, '0');
+        if (n2->dec > 0)
+            n2->dec--;
+        else
+            appendDigit(n2, '0');
+        i++;
+    }
+    i = 9;
+    Number *c, *dividend, *tmpAns, *q, *pro;
+    c = (Number *)malloc(sizeof(Number));
+    dividend = (Number *)malloc(sizeof(Number));
+    tmpAns = (Number *)malloc(sizeof(Number));
+    pro = (Number *)malloc(sizeof(Number));
+    q = (Number *)malloc(sizeof(Number));
+    initNumber(tmpAns);
+    initNumber(c);
+    initNumber(q);
+    initNumber(dividend);
+    initNumber(pro);
+    if (n1->sign == n2->sign)
+    {
+        q->sign = PLUS;
+        n1->sign = n2->sign = PLUS;
+    }
+    else
+    {
+        q->sign = MINUS;
+        n1->sign = n2->sign = PLUS;
+    }
+    node *p = n1->head;
+    char ch = p->num + '0';
+    appendDigit(dividend, ch);
+    while (q->dec < SCALE)
+    {
+        while (i >= 0)
+        {
+            insertAtBegining(c, i); //converting i from int to Number Datatype,so that we can directly use functions
+            pro = multiply(n2, c);
+            tmpAns = sub(dividend, pro);
+            if (tmpAns->sign != MINUS)
+            {
+                // printf("%d inside\n", i);
+                appendDigit(q, i + '0');
+                // delete c Number to make it again assign to single digit and free up memory
+                node *tmp = c->head;
+                free(tmp);
+                c->head = c->tail = NULL;
+                break;
+            }
+            else
+            {
+                // delete c Number to make it again assign to single digit and free up memory
+                node *tmp = c->head;
+                free(tmp);
+                c->head = c->tail = NULL;
+                i--;
+            }
+        }
+        dividend = tmpAns;
+        if (p->next != NULL)
+        {
+            // this part does bringing down next digit in divide i.e 51/3=>2'1' brings 1 and append it to dividend
+            p = p->next;
+            ch = p->num + '0';
+            appendDigit(dividend, ch);
+        }
+        else
+        {
+            // add zeroes to end of dividend 10/11=>100/11 and increase count of decimal by 1
+            return q;
+        }
+        i = 9;
+        // delete c Number to make it again assign to single digit and free up memory
+        node *tmp = c->head;
+        free(tmp);
+        c->head = c->tail = NULL;
+    }
 }
 Number *modulus(Number *n1, Number *n2)
 {
@@ -615,7 +711,7 @@ Number *modulus(Number *n1, Number *n2)
             {
                 // printf("%d inside\n", i);
                 appendDigit(q, i + '0');
-                // delete c number to make it again assign to single digit and free up memory
+                // delete c Number to make it again assign to single digit and free up memory
                 node *tmp = c->head;
                 free(tmp);
                 c->head = c->tail = NULL;
@@ -623,7 +719,7 @@ Number *modulus(Number *n1, Number *n2)
             }
             else
             {
-                // delete c number to make it again assign to single digit and free up memory
+                // delete c Number to make it again assign to single digit and free up memory
                 node *tmp = c->head;
                 free(tmp);
                 c->head = c->tail = NULL;
@@ -633,7 +729,7 @@ Number *modulus(Number *n1, Number *n2)
         dividend = tmpAns;
         if (p->next != NULL)
         {
-            // this part does bringing down next digit in division i.e 51/3=>2'1' brings 1 and append it to dividend
+            // this part does bringing down next digit in divide i.e 51/3=>2'1' brings 1 and append it to dividend
             p = p->next;
             ch = p->num + '0';
             appendDigit(dividend, ch);
@@ -645,58 +741,101 @@ Number *modulus(Number *n1, Number *n2)
             return tmpAns;
         }
         i = 9;
-        // delete c number to make it again assign to single digit and free up memory
+        // delete c Number to make it again assign to single digit and free up memory
         node *tmp = c->head;
         free(tmp);
         c->head = c->tail = NULL;
     }
 }
-
+// duplicate n2 to n1
+void duplicateNumber(Number *n1, Number *n2)
+{
+    n1->sign = n2->sign;
+    n1->sign = n2->sign;
+    node *p = n2->head;
+    int d;
+    for (int i = 0; i < length(*n2); i++)
+    {
+        d = p->num;
+        appendDigit(n1, d + '0');
+        p = p->next;
+    }
+}
 Number *power(Number *n1, Number *n2)
 {
-
+    int reciprocate = 0, answerNegative = 0;
+    if (n2->sign == MINUS)
+    {
+        reciprocate = 1;
+    }
     Number *ans = (Number *)malloc(sizeof(Number));
     initNumber(ans);
     Number *one = (Number *)malloc(sizeof(Number));
     initNumber(one);
     insertAtBegining(one, 1);
-    int reciprocate = 0;
-    node *b = n2->tail;
+    Number *two = (Number *)malloc(sizeof(Number));
+    initNumber(two);
+    insertAtBegining(two, 2);
+    if (isNumber0(n2))
+    {
+        return one;
+    }
+    else if (isNumber0(sub(n2, one)))
+    {
+        return n1;
+    }
+    // copy n1 to answer
+    node *lastDigit = n2->tail;
+
     if (n1->sign == PLUS && n2->sign == MINUS)
     {
         n2->sign = PLUS;
-        reciprocate = 1;
     }
     else if (n1->sign == MINUS)
     {
-        if (b->num % 2 == 0)
-        {
-            ans->sign = PLUS;
-        }
-        else
-        {
-            ans->sign = MINUS;
-        }
+        if (lastDigit->num % 2)
+            // power is odd,hence answer will be negative
+            answerNegative = 1;
         n1->sign = PLUS;
         if (n2->sign == MINUS)
         {
-            reciprocate = 1;
             n2->sign = PLUS;
         }
     }
+    duplicateNumber(ans, n1);
     n2 = sub(n2, one);
     // displayNumber(n2);
+    // while (y > 0)
+    // {
+    //     if (y % 2)
+    //     {
+    //         prod *= term;
+    //     }
+    //     term = term * term;
+    //     y = y / 2;
+    // }
+    // faster algorithm try 2054^3000->it contains 9938 digits,this algo computes this in 1 sec
     while (!isNumber0(n2))
     {
-        ans = multiply(n1, n1);
-        // displayNumber(ans);
-        n2 = sub(n2, one);
+        lastDigit = n2->tail;
+        if (lastDigit->num % 2)
+        {
+            ans = multiply(ans, n1);
+        }
+        n1 = multiply(n1, n1);
+        n2 = floordivide(n2, two);
     }
+    // slower approach,takes n2 number of multiplications
+    // while (!isNumber0(n2))
+    // {
+    //     ans = multiply(n1, ans);
+    //     // displayNumber(ans);
+    //     n2 = sub(n2, one);
+    // }
     if (reciprocate)
-    {
         ans = divide(one, ans);
-    }
-
+    if (answerNegative)
+        ans->sign = MINUS;
     return ans;
 }
 
@@ -709,14 +848,19 @@ int main()
     initNumber(n1);
     initNumber(n2);
     initNumber(n3);
-    insertAtBegining(n1, 9);
-    // appendDigit(n1, '0');
+    insertAtBegining(n1, 3);
+    appendDigit(n1, '0');
+    appendDigit(n1, '0');
+    appendDigit(n1, '0');
     // appendDigit(n1, '5');
     // appendDigit(n1, '4');
-    // n1->dec = 1;
+    // n2->sign = MINUS;
+    // n1->sign = MINUS;
     // n1->dec = 6;
     appendDigit(n2, '2');
-    // appendDigit(n2, '0');
+    appendDigit(n2, '0');
+    appendDigit(n2, '5');
+    appendDigit(n2, '4');
     // appendDigit(n1, '3');
     // appendDigit(n1, '8');
     // appendDigit(n2, '8');
@@ -724,9 +868,10 @@ int main()
     // appendDigit(n2, '2');
     // appendDigit(n2, '3');
     // displayNumber(n1);
+
     displayNumber(n1);
     displayNumber(n2);
-    n3 = power(n1, n2);
+    n3 = power(n2, n1);
     displayNumber(n3);
     // printf("%d", length(*n1));
 
