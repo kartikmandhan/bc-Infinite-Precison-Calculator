@@ -90,3 +90,4 @@ int main()
     }
 }
 // 2^3+5%2/2*4^3
+// Sequence of executable files: 1.try  2.pro 3.tryPower

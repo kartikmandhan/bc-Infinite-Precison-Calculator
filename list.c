@@ -291,6 +291,7 @@ Number *sub(Number *n1, Number *n2)
             }
         }
     }
+    ans->dec = n1->dec;
     return ans;
 }
 
