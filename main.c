@@ -89,3 +89,4 @@ int main()
             printf("Incorrect expression\n");
     }
 }
+// 2^3+5%2/2*4^3

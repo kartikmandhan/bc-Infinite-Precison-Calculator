@@ -838,7 +838,7 @@ Number *power(Number *n1, Number *n2)
         ans->sign = MINUS;
     return ans;
 }
-
+/*
 int main()
 {
     Number *n1, *n2, *n3;
@@ -848,19 +848,19 @@ int main()
     initNumber(n1);
     initNumber(n2);
     initNumber(n3);
-    insertAtBegining(n1, 3);
-    appendDigit(n1, '0');
-    appendDigit(n1, '0');
-    appendDigit(n1, '0');
+    insertAtBegining(n1, 9);
+    // appendDigit(n1, '0');
+    // appendDigit(n1, '0');
+    // appendDigit(n1, '0');
     // appendDigit(n1, '5');
     // appendDigit(n1, '4');
     // n2->sign = MINUS;
-    // n1->sign = MINUS;
+    n1->sign = MINUS;
     // n1->dec = 6;
     appendDigit(n2, '2');
     appendDigit(n2, '0');
     appendDigit(n2, '5');
-    appendDigit(n2, '4');
+    // appendDigit(n2, '4');
     // appendDigit(n1, '3');
     // appendDigit(n1, '8');
     // appendDigit(n2, '8');
@@ -880,4 +880,4 @@ int main()
     // displayNumber(n3);
 
     // printf("%d\n", compareEqual(*n1, *n2));
-}
+}*/

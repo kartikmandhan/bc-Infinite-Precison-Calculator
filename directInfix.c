@@ -60,6 +60,7 @@ token getToken(char *expr, int *reset)
             case '*':
             case '/':
             case '%':
+            case '^':
             case '(':
             case ')':
 
@@ -118,6 +119,7 @@ token getToken(char *expr, int *reset)
             case '*':
             case '/':
             case '%':
+            case '^':
             case '(':
             case ')':
                 t.type = OPERAND;
@@ -185,6 +187,7 @@ token getToken(char *expr, int *reset)
             case '*':
             case '/':
             case '%':
+            case '^':
             case '(':
             case ')':
                 t.type = OPERATOR;
@@ -253,6 +256,7 @@ token getToken(char *expr, int *reset)
             case '*':
             case '/':
             case '%':
+            case '^':
             case '(':
             case ')':
                 t.type = OPERAND;
@@ -329,8 +333,11 @@ int precedence(char op)
     case '%':
         return 6;
         break;
-    case '(':
+    case '^':
         return 7;
+        break;
+    case '(':
+        return 8;
         break;
 
     default:
@@ -439,6 +446,11 @@ Number *infix(char *expression)
                         answer = modulus(b, a);
                         push(&operandStack, answer);
                         break;
+                    case '^':
+                        // answer = b % a;
+                        answer = power(b, a);
+                        push(&operandStack, answer);
+                        break;
                     case '(':
                         cpush(&operatorStack, prev_op);
                         push(&operandStack, b);
@@ -524,6 +536,11 @@ Number *infix(char *expression)
                     case '%':
                         // answer = b % a;
                         answer = modulus(b, a);
+                        push(&operandStack, answer);
+                        break;
+                    case '^':
+                        // answer = b % a;
+                        answer = power(b, a);
                         push(&operandStack, answer);
                         break;
 
