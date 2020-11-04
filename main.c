@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 // function reads and returns length of the string that it read.
 #include "infix.h"
 
@@ -72,12 +73,38 @@ void insert0AtStartAndAfterBrac(char *line)
         }
     }
 }
-int main()
+int main(int argc, char *argv[])
 {
     printf("This project is inspired from the bc command line calculator in Linux\n");
-    printf("It is free to use software with no WARANTY\n");
+    printf("This is free software with ABSOLUTELY NO WARRANTY.\n");
+    if (argc == 2 && !strcmp(argv[1], "-h"))
+    {
+        printf("Usage: project [option]\n");
+        printf("\t-h\t--help\t\tprint this help and exit\n");
+        printf("\t-v\t--version\tprints information about version of this software\n");
+        printf("\t-i\t--integers\tprints answers in integer format only\n");
+        printf(" expr + expr\n");
+        printf("\tThe result of the expression is the sum of the two expressions.\n");
+        printf(" expr - expr\n");
+        printf("\tThe result of the expression is the difference of the two expressions.\n\n");
+        printf(" expr * expr\n");
+        printf("\tThe result of the expression is the sum of the two expressions.\n\n");
+        printf(" expr / expr\n");
+        printf("\tThe result of the expression is the quotient of the two  expressions.\n\n");
+        printf(" expr %% expr\n");
+        printf("\tThe result of the expression is the \"remainder\n\n");
+        printf(" expr ^ expr\n");
+        printf("\tThe result of the expression is the value of the first raised to the second\n\n");
+        exit(0);
+    }
+    if (argc > 2)
+    {
+        printf("Usage: project [option]\n");
+    }
+
     char line[LINE_LEN];
     Number *result;
+    printf(">>> ");
     while (readline(line, LINE_LEN))
     {
         insert0AtStartAndAfterBrac(line);
@@ -87,6 +114,7 @@ int main()
             displayNumber(result);
         else
             printf("Incorrect expression\n");
+        printf("\n>>> ");
     }
 }
 // 2^3+5%2/2*4^3

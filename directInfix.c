@@ -70,6 +70,7 @@ token getToken(char *expr, int *reset)
 
                 break;
             case ' ':
+            case '\t':
                 nextstate = SPACE;
                 currstate = nextstate;
                 i++;
@@ -130,6 +131,7 @@ token getToken(char *expr, int *reset)
                 return t;
                 break;
             case ' ':
+            case '\t':
                 t.type = OPERAND;
                 t.num = new_number;
                 nextstate = SPACE;
@@ -198,6 +200,7 @@ token getToken(char *expr, int *reset)
                 return t;
                 break;
             case ' ':
+            case '\t':
                 t.type = OPERATOR;
                 t.op = expr[i - 1];
                 nextstate = SPACE;
@@ -267,6 +270,7 @@ token getToken(char *expr, int *reset)
                 return t;
                 break;
             case ' ':
+            case '\t':
                 t.type = OPERAND;
                 t.num = new_number;
                 nextstate = SPACE;
@@ -388,7 +392,7 @@ Number *infix(char *expression)
                 CBcount++;
             if (CBcount > OBcount)
             {
-                printf("Unblanced paranthesis");
+                printf("Unblanced paranthesis\n");
                 return NULL;
             }
             if (!cisEmpty(operatorStack))
