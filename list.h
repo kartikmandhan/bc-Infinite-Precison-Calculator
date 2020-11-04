@@ -22,8 +22,8 @@ int length(Number n);
 void displayNumber(Number *num);
 void removeZeros(Number *n1);
 void insertAtBegining(Number *num, int no);
-Number *makeLengthEqual(Number *a, Number *b);
-Number *makeDecimalEqual(Number *a, Number *b);
+void makeLengthEqual(Number *a, Number *b);
+void makeDecimalEqual(Number *a, Number *b);
 int compareEqual(Number a, Number b);
 int isNumber0(Number *n1);
 // calculations

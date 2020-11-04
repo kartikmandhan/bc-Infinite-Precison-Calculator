@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include "list.h"
 #define SCALE 31
-
+#include <string.h>
+#include <math.h>
 void initNumber(Number *n)
 {
     n->head = NULL;
@@ -137,7 +138,7 @@ void insertAtBegining(Number *num, int no)
         num->head = new_node;
     }
 }
-Number *makeLengthEqual(Number *a, Number *b)
+void makeLengthEqual(Number *a, Number *b)
 {
     int diff = length(*a) - length(*b);
     if (diff > 0)
@@ -156,7 +157,7 @@ Number *makeLengthEqual(Number *a, Number *b)
         }
     }
 }
-Number *makeDecimalEqual(Number *a, Number *b)
+void makeDecimalEqual(Number *a, Number *b)
 {
     int diff = a->dec - b->dec;
     if (diff > 0)
@@ -231,7 +232,7 @@ Number *sub(Number *n1, Number *n2)
         }
         else if (n1->sign == PLUS)
         {
-            int substraction, diff = 0, borrow = 0, dig_a, dig_b, len = length(*n1);
+            int diff = 0, borrow = 0, dig_a, dig_b, len = length(*n1);
             node *tail_a = n1->tail;
             node *tail_b = n2->tail;
             if (compareEqual(*n1, *n2) == 1)
@@ -641,7 +642,6 @@ Number *floordivide(Number *n1, Number *n2)
         }
         else
         {
-            // add zeroes to end of dividend 10/11=>100/11 and increase count of decimal by 1
             return q;
         }
         i = 9;
@@ -826,7 +826,7 @@ Number *power(Number *n1, Number *n2)
         n1 = multiply(n1, n1);
         n2 = floordivide(n2, two);
     }
-    // slower approach,takes n2 number of multiplications
+    // slower approach,takes n2 Number of multiplications
     // while (!isNumber0(n2))
     // {
     //     ans = multiply(n1, ans);
@@ -839,7 +839,107 @@ Number *power(Number *n1, Number *n2)
         ans->sign = MINUS;
     return ans;
 }
-/*
+Number *twoPI()
+{
+    Number *twopi = (Number *)malloc(sizeof(Number));
+    // value of 2pi upto 30 decimal digits
+    char value[] = "6.28318530717958647692528676655";
+    int i = 0;
+    while (value[i] != '\0')
+    {
+        appendDigit(twopi, value[i]);
+        i++;
+    }
+    return twopi;
+}
+double NumberToDouble(Number *n1)
+{
+    double ans;
+    char temp[1024];
+    node *p = n1->head;
+    int i;
+    int posDecimal = length(*n1) - n1->dec;
+    for (i = 0; p != NULL; i++)
+    {
+        if (i == posDecimal)
+        {
+            temp[i] = '.';
+            i++;
+        }
+        temp[i] = p->num + '0';
+        p = p->next;
+    }
+    temp[i] = '\0';
+    sscanf(temp, "%lf", &ans);
+    if (n1->sign == MINUS)
+    {
+        ans = -1 * ans;
+    }
+    return ans;
+}
+Number *doubletoNumber(double a)
+{
+    Number *ans = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    char temp[1024];
+    sprintf(temp, "%lf", a);
+    int i = 0;
+    if (temp[i] == '-')
+    {
+        ans->sign = MINUS;
+        i++;
+    }
+    for (int i = 0; temp[i] != '\0'; i++)
+    {
+        if (temp[i] == '.')
+        {
+            ans->dec = strlen(temp) - i - 1;
+        }
+        else
+        {
+            appendDigit(ans, temp[i]);
+        }
+    }
+    return ans;
+}
+Number *Sin(Number *n1)
+{
+    Number *ans = (Number *)malloc(sizeof(Number));
+    Number *angleInRadians = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    initNumber(angleInRadians);
+    angleInRadians = modulus(n1, twoPI());
+    double angle = NumberToDouble(angleInRadians);
+    double value = sinl(angle);
+    ans = doubletoNumber(value);
+    return ans;
+}
+Number *Cos(Number *n1)
+{
+    Number *ans = (Number *)malloc(sizeof(Number));
+    Number *angleInRadians = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    initNumber(angleInRadians);
+    angleInRadians = modulus(n1, twoPI());
+    double angle = NumberToDouble(angleInRadians);
+    double value = cosl(angle);
+    ans = doubletoNumber(value);
+    return ans;
+}
+Number *Tan(Number *n1)
+{
+    Number *ans = (Number *)malloc(sizeof(Number));
+    Number *angleInRadians = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    initNumber(angleInRadians);
+    angleInRadians = modulus(n1, twoPI());
+    double angle = NumberToDouble(angleInRadians);
+    double value = tanl(angle);
+    ans = doubletoNumber(value);
+    return ans;
+}
+// This function does conversion from Number to double
+
 int main()
 {
     Number *n1, *n2, *n3;
@@ -856,11 +956,16 @@ int main()
     // appendDigit(n1, '5');
     // appendDigit(n1, '4');
     // n2->sign = MINUS;
-    n1->sign = MINUS;
-    // n1->dec = 6;
-    appendDigit(n2, '2');
+    // n1->sign = MINUS;
+    n2->dec = 6;
     appendDigit(n2, '0');
     appendDigit(n2, '5');
+    appendDigit(n2, '2');
+    appendDigit(n2, '3');
+    appendDigit(n2, '5');
+    appendDigit(n2, '9');
+    appendDigit(n2, '9');
+    // appendDigit(n2, '5');
     // appendDigit(n2, '4');
     // appendDigit(n1, '3');
     // appendDigit(n1, '8');
@@ -870,9 +975,9 @@ int main()
     // appendDigit(n2, '3');
     // displayNumber(n1);
 
-    displayNumber(n1);
+    // displayNumber(n1);
     displayNumber(n2);
-    n3 = power(n2, n1);
+    n3 = Tan(n2);
     displayNumber(n3);
     // printf("%d", length(*n1));
 
@@ -881,4 +986,4 @@ int main()
     // displayNumber(n3);
 
     // printf("%d\n", compareEqual(*n1, *n2));
-}*/
+}
