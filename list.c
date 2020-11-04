@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-#define SCALE 31
+#define SCALE 30
 #include <string.h>
 #include <math.h>
 void initNumber(Number *n)
@@ -505,7 +505,7 @@ Number *divide(Number *n1, Number *n2)
     node *p = n1->head;
     char ch = p->num + '0';
     appendDigit(dividend, ch);
-    while (q->dec < SCALE)
+    while (1)
     {
         while (i >= 0)
         {
@@ -542,6 +542,10 @@ Number *divide(Number *n1, Number *n2)
         else
         {
             // add zeroes to end of dividend 10/11=>100/11 and increase count of decimal by 1
+            if (q->dec == SCALE)
+            {
+                return q;
+            }
             q->dec++;
             // printf("%d\n", q->dec);
             appendDigit(dividend, '0');
@@ -552,9 +556,9 @@ Number *divide(Number *n1, Number *n2)
         free(tmp);
         c->head = c->tail = NULL;
     }
-    q->dec--;
+    // q->dec--;
     // makes count of decimal from 31 to 30(correct)
-    return q;
+    // return q;
 }
 Number *floordivide(Number *n1, Number *n2)
 {
@@ -606,7 +610,7 @@ Number *floordivide(Number *n1, Number *n2)
     node *p = n1->head;
     char ch = p->num + '0';
     appendDigit(dividend, ch);
-    while (q->dec < SCALE)
+    while (1)
     {
         while (i >= 0)
         {
@@ -701,7 +705,7 @@ Number *modulus(Number *n1, Number *n2)
     node *p = n1->head;
     char ch = p->num + '0';
     appendDigit(dividend, ch);
-    while (q->dec < SCALE)
+    while (1)
     {
         while (i >= 0)
         {
@@ -842,14 +846,16 @@ Number *power(Number *n1, Number *n2)
 Number *twoPI()
 {
     Number *twopi = (Number *)malloc(sizeof(Number));
+    initNumber(twopi);
     // value of 2pi upto 30 decimal digits
-    char value[] = "6.28318530717958647692528676655";
+    char value[] = "6.283185307179586476925286766559";
     int i = 0;
     while (value[i] != '\0')
     {
         appendDigit(twopi, value[i]);
         i++;
     }
+    twopi->dec = 30;
     return twopi;
 }
 double NumberToDouble(Number *n1)
@@ -912,6 +918,7 @@ Number *Sin(Number *n1)
     double angle = NumberToDouble(angleInRadians);
     double value = sinl(angle);
     ans = doubletoNumber(value);
+    free(angleInRadians);
     return ans;
 }
 Number *Cos(Number *n1)
@@ -924,6 +931,7 @@ Number *Cos(Number *n1)
     double angle = NumberToDouble(angleInRadians);
     double value = cosl(angle);
     ans = doubletoNumber(value);
+    free(angleInRadians);
     return ans;
 }
 Number *Tan(Number *n1)
@@ -936,6 +944,7 @@ Number *Tan(Number *n1)
     double angle = NumberToDouble(angleInRadians);
     double value = tanl(angle);
     ans = doubletoNumber(value);
+    free(angleInRadians);
     return ans;
 }
 // This function does conversion from Number to double
@@ -943,13 +952,13 @@ Number *Tan(Number *n1)
 int main()
 {
     Number *n1, *n2, *n3;
-    n1 = (Number *)malloc(sizeof(Number));
+    // n1 = (Number *)malloc(sizeof(Number));
     n2 = (Number *)malloc(sizeof(Number));
     n3 = (Number *)malloc(sizeof(Number));
-    initNumber(n1);
+    // initNumber(n1);
     initNumber(n2);
     initNumber(n3);
-    insertAtBegining(n1, 9);
+    // insertAtBegining(n1, 9);
     // appendDigit(n1, '0');
     // appendDigit(n1, '0');
     // appendDigit(n1, '0');
@@ -958,6 +967,8 @@ int main()
     // n2->sign = MINUS;
     // n1->sign = MINUS;
     n2->dec = 6;
+    n1 = twoPI();
+
     appendDigit(n2, '0');
     appendDigit(n2, '5');
     appendDigit(n2, '2');
@@ -975,15 +986,13 @@ int main()
     // appendDigit(n2, '3');
     // displayNumber(n1);
 
-    // displayNumber(n1);
+    displayNumber(n1);
     displayNumber(n2);
-    n3 = Tan(n2);
+    n3 = divide(n2, n1);
     displayNumber(n3);
     // printf("%d", length(*n1));
 
     // displayNumber(n3);
     // n3 = add(n1, n2);
     // displayNumber(n3);
-
-    // printf("%d\n", compareEqual(*n1, *n2));
 }
