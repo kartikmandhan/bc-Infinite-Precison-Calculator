@@ -63,6 +63,9 @@ token getToken(char *expr, int *reset)
             case '^':
             case '(':
             case ')':
+            case 'S':
+            case 'C':
+            case 'T':
 
                 nextstate = OP;
                 currstate = nextstate;
@@ -123,6 +126,9 @@ token getToken(char *expr, int *reset)
             case '^':
             case '(':
             case ')':
+            case 'S':
+            case 'C':
+            case 'T':
                 t.type = OPERAND;
                 t.num = new_number;
                 nextstate = OP;
@@ -192,6 +198,9 @@ token getToken(char *expr, int *reset)
             case '^':
             case '(':
             case ')':
+            case 'S':
+            case 'C':
+            case 'T':
                 t.type = OPERATOR;
                 t.op = expr[i - 1];
                 nextstate = OP;
@@ -262,6 +271,9 @@ token getToken(char *expr, int *reset)
             case '^':
             case '(':
             case ')':
+            case 'S':
+            case 'C':
+            case 'T':
                 t.type = OPERAND;
                 t.num = new_number;
                 nextstate = OP;
@@ -323,6 +335,13 @@ int precedence(char op)
 {
     switch (op)
     {
+    case 'S':
+    case 'C':
+    case 'T':
+        // despite lowest precedence we evaluate them first
+        // thier precedence is made lower so that we dont enter that precedence while loop
+        return -1;
+        break;
     case ')':
         return 3;
         break;
@@ -354,7 +373,7 @@ int precedence(char op)
 Number *infix(char *expression)
 {
     char ch, prev_op, curr_op;
-    int reset = 1, OBcount = 0, CBcount = 0, prev, curr;
+    int reset = 1, OBcount = 0, CBcount = 0, prev, curr, trigo = 0;
     istack operandStack;
     cstack operatorStack;
     cinit(&operatorStack);
@@ -399,6 +418,88 @@ Number *infix(char *expression)
             {
                 prev_op = ctop(operatorStack);
                 // for starting situation we dont hav prev_op,hence if stack is empty then dont do all this
+                switch (prev_op)
+                {
+                case 'S':
+                    trigo = 1;
+                    cpop(&operatorStack);
+                    // printf("here");
+                    t = getToken(expression, &reset);
+                    if (t.type == OPERAND)
+                    {
+                        push(&operandStack, t.num);
+
+                        t = getToken(expression, &reset);
+                        // if(t.type==OPERATOR && t.op==")"){
+
+                        // }
+                        OBcount--; //count of opening bracket
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                    // printNumber(*t.num);
+                    a = pop(&operandStack);
+                    answer = Sin(a);
+                    push(&operandStack, answer);
+                    // printf("%d", cisempty(&cs));
+                    // printNumber(*answer);
+                    //cpush(&cs, curr_op);
+                    break;
+                case 'C':
+                    trigo = 1;
+                    cpop(&operatorStack);
+                    // printf("here");
+                    t = getToken(expression, &reset);
+                    if (t.type == OPERAND)
+                    {
+                        push(&operandStack, t.num);
+
+                        t = getToken(expression, &reset);
+                        // if(t.type==OPERATOR && t.op==")"){
+
+                        // }
+                        OBcount--; //count of opening bracket
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                    // printNumber(*t.num);
+                    a = pop(&operandStack);
+                    answer = Cos(a);
+                    push(&operandStack, answer);
+                    //cpush(&cs, curr_op);
+                    break;
+                case 'T':
+                    trigo = 1;
+                    cpop(&operatorStack);
+                    // printf("here");
+                    t = getToken(expression, &reset);
+                    if (t.type == OPERAND)
+                    {
+                        push(&operandStack, t.num);
+
+                        t = getToken(expression, &reset);
+                        // if(t.type==OPERATOR && t.op==")"){
+
+                        // }
+                        OBcount--; //count of opening bracket
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                    // printNumber(*t.num);
+                    a = pop(&operandStack);
+                    answer = Tan(a);
+                    push(&operandStack, answer);
+                    //cpush(&cs, curr_op);
+                    break;
+                default:
+                    break;
+                }
                 while (precedence(curr_op) <= precedence(prev_op))
                 {
                     prev_op = cpop(&operatorStack);
@@ -477,7 +578,14 @@ Number *infix(char *expression)
                         break;
                 }
             }
-            cpush(&operatorStack, curr_op);
+            if (trigo)
+            {
+                trigo = 0;
+            }
+            else
+            {
+                cpush(&operatorStack, curr_op);
+            }
 
             if (curr_op == ')')
             {
