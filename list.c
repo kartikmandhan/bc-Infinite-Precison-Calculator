@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-#define SCALE 30
+// #define scale 30
+extern int scale;
 #include <string.h>
 #include <math.h>
 void initNumber(Number *n)
@@ -542,7 +543,7 @@ Number *divide(Number *n1, Number *n2)
         else
         {
             // add zeroes to end of dividend 10/11=>100/11 and increase count of decimal by 1
-            if (q->dec == SCALE)
+            if (q->dec == scale)
             {
                 return q;
             }
@@ -556,9 +557,6 @@ Number *divide(Number *n1, Number *n2)
         free(tmp);
         c->head = c->tail = NULL;
     }
-    // q->dec--;
-    // makes count of decimal from 31 to 30(correct)
-    // return q;
 }
 Number *floordivide(Number *n1, Number *n2)
 {
@@ -571,8 +569,6 @@ Number *floordivide(Number *n1, Number *n2)
     removeZeros(n2);
     int k = n1->dec > n2->dec ? n1->dec : n2->dec;
     int i = 0;
-    // remove decimal and append 0 eg
-    // 3.144/22.1 =>3144/22100
     while (i < k)
     {
         if (n1->dec > 0)
@@ -614,7 +610,7 @@ Number *floordivide(Number *n1, Number *n2)
     {
         while (i >= 0)
         {
-            insertAtBegining(c, i); //converting i from int to Number Datatype,so that we can directly use functions
+            insertAtBegining(c, i);
             pro = multiply(n2, c);
             tmpAns = sub(dividend, pro);
             if (tmpAns->sign != MINUS)
@@ -714,7 +710,6 @@ Number *modulus(Number *n1, Number *n2)
             tmpAns = sub(dividend, pro);
             if (tmpAns->sign != MINUS)
             {
-                // printf("%d inside\n", i);
                 appendDigit(q, i + '0');
                 // delete c Number to make it again assign to single digit and free up memory
                 node *tmp = c->head;

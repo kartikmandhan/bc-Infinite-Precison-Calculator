@@ -692,33 +692,26 @@ Number *infix(char *expression)
                     switch (ch)
                     {
                     case '+':
-                        // answer = b + a;
-
                         answer = add(a, b);
                         push(&operandStack, answer);
                         break;
                     case '-':
-                        // answer = b - a;
                         answer = sub(b, a);
                         push(&operandStack, answer);
                         break;
                     case '*':
-                        // answer = b * a;
                         answer = multiply(b, a);
                         push(&operandStack, answer);
                         break;
                     case '/':
-                        // answer = b / a;
                         answer = divide(b, a);
                         push(&operandStack, answer);
                         break;
                     case '%':
-                        // answer = b % a;
                         answer = modulus(b, a);
                         push(&operandStack, answer);
                         break;
                     case '^':
-                        // answer = b % a;
                         answer = power(b, a);
                         push(&operandStack, answer);
                         break;
@@ -732,7 +725,6 @@ Number *infix(char *expression)
             else
             {
                 printf("Error in Expression\n");
-                //return INT_MIN;
                 return NULL;
             }
             if (!isEmpty(operandStack))
@@ -741,7 +733,6 @@ Number *infix(char *expression)
                 if (isEmpty(operandStack))
                 {
                     return answer;
-                    // printf("Result:%d\n", answer);
                 }
                 else
                 {

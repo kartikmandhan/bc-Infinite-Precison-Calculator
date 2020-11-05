@@ -5,6 +5,7 @@
 #include "infix.h"
 
 #define LINE_LEN 1024
+int scale;
 int readline(char *line, int len)
 {
     int i;
@@ -94,19 +95,28 @@ int main(int argc, char *argv[])
         printf(" expr %% expr\n");
         printf("\tThe result of the expression is the \"remainder\n\n");
         printf(" expr ^ expr\n");
-        printf("\tThe result of the expression is the value of the first raised to the second\n\n");
+        printf("\tThe result of the expression is the value of the first raised to the second, provided second number should be an integer \n\n");
+        printf(" S(x)\n");
+        printf("\tThe sine of x, x is in radians.\n");
+        printf(" C(x)\n");
+        printf("\tThe cosine of x, x is in radians.\n");
+        printf(" T(x)\n");
+        printf("\tThe tangent of x, x is in radians.\n");
         exit(0);
     }
     if (argc > 2)
     {
         printf("Usage: project [option]\n");
     }
-
+    printf("Enter the scale for calculations:\n");
+    scanf("%d", &scale);
+    getchar();
     char line[LINE_LEN];
     Number *result;
     printf(">>> ");
     while (readline(line, LINE_LEN))
     {
+
         insert0AtStartAndAfterBrac(line);
         // printf("%s", line);
         result = infix(line);
