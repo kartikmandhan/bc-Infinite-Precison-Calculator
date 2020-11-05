@@ -971,7 +971,25 @@ Number *Tan(Number *n1)
     free(angleInRadians);
     return ans;
 }
-// This function does conversion from Number to double
+Number *TheNumberE()
+{
+    Number *e = (Number *)malloc(sizeof(Number));
+    initNumber(e);
+    // value of e upto 20 decimal digits
+    char value[] = "2.71828182845904523536";
+    int i = 0;
+    while (value[i] != '\0')
+    {
+        appendDigit(e, value[i]);
+        i++;
+    }
+    e->dec = 20;
+    return e;
+}
+Number *exponent(Number *n1)
+{
+    return power(TheNumberE(), n1);
+}
 /*
 int main()
 {
@@ -1011,12 +1029,12 @@ int main()
     // appendDigit(n2, '3');
     // displayNumber(n1);
 
+    displayNumber(TheNumberE());
     displayNumber(n1);
-    displayNumber(n2);
-    n3 = power(n2, n1);
+    n3 = exponent(n1);
     displayNumber(n3);
     // printf("%d", length(*n1));
-
+    printf("%lf", exp(3));
     // displayNumber(n3);
     // n3 = add(n1, n2);
     // displayNumber(n3);

@@ -66,6 +66,7 @@ token getToken(char *expr, int *reset)
             case 'S':
             case 'C':
             case 'T':
+            case 'e':
 
                 nextstate = OP;
                 currstate = nextstate;
@@ -129,6 +130,7 @@ token getToken(char *expr, int *reset)
             case 'S':
             case 'C':
             case 'T':
+            case 'e':
                 t.type = OPERAND;
                 t.num = new_number;
                 nextstate = OP;
@@ -201,6 +203,7 @@ token getToken(char *expr, int *reset)
             case 'S':
             case 'C':
             case 'T':
+            case 'e':
                 t.type = OPERATOR;
                 t.op = expr[i - 1];
                 nextstate = OP;
@@ -274,6 +277,7 @@ token getToken(char *expr, int *reset)
             case 'S':
             case 'C':
             case 'T':
+            case 'e':
                 t.type = OPERAND;
                 t.num = new_number;
                 nextstate = OP;
@@ -338,6 +342,7 @@ int precedence(char op)
     case 'S':
     case 'C':
     case 'T':
+    case 'e':
         // despite lowest precedence we evaluate them first
         // thier precedence is made lower so that we dont enter that precedence while loop
         return -1;
@@ -420,6 +425,52 @@ Number *infix(char *expression)
                 // for starting situation we dont hav prev_op,hence if stack is empty then dont do all this
                 switch (prev_op)
                 {
+                case 'e':
+                    trigo = 1;
+                    cpop(&operatorStack);
+                    t = getToken(expression, &reset);
+                    if (t.type == OPERAND)
+                    {
+                        if (t.num->head->num == 0)
+                        {
+                            int negateNumber = 0;
+                            t = getToken(expression, &reset);
+                            // here the token will be '-' or '+' only
+                            if (t.op == '-')
+                                negateNumber = 1;
+                            else if (t.op == '+')
+                                negateNumber = 0;
+                            // the token recieved now will be the angle in radians
+                            t = getToken(expression, &reset);
+                            if (t.type == OPERAND)
+                            {
+                                if (negateNumber)
+                                    t.num->sign = MINUS;
+                            }
+                            else
+                            {
+                                printf("Evaluation of expression inside Exponent is not Supported\n");
+                                return NULL;
+                            }
+                        }
+                        push(&operandStack, t.num);
+
+                        t = getToken(expression, &reset);
+                        if (t.op != ')')
+                        {
+                            printf("Evaluation of expression inside Exponent is not Supported\n");
+                            return NULL;
+                        }
+                        OBcount--; //count of opening bracket
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                    a = pop(&operandStack);
+                    answer = exponent(a);
+                    push(&operandStack, answer);
+                    break;
                 case 'S':
                     trigo = 1;
                     cpop(&operatorStack);

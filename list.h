@@ -27,6 +27,7 @@ void makeDecimalEqual(Number *a, Number *b);
 int compareEqual(Number a, Number b);
 int isNumber0(Number *n1);
 void duplicateNumber(Number *n1, Number *n2);
+Number *TheNumberE();
 // calculations
 Number *add(Number *n1, Number *n2);
 Number *sub(Number *n1, Number *n2);
@@ -38,4 +39,5 @@ Number *power(Number *n1, Number *n2);
 Number *Sin(Number *n1);
 Number *Cos(Number *n1);
 Number *Tan(Number *n1);
+Number *exponent(Number *n1);
 #endif
