@@ -20,6 +20,7 @@ void initNumber(Number *n);
 void appendDigit(Number *n, char ch);
 int length(Number n);
 void displayNumber(Number *num);
+void writeNumberInfile(Number *num, FILE *fp);
 void removeZeros(Number *n1);
 void insertAtBegining(Number *num, int no);
 void makeLengthEqual(Number *a, Number *b);

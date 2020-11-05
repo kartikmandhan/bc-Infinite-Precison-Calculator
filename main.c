@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 // function reads and returns length of the string that it read.
 #include "infix.h"
 
@@ -87,21 +88,23 @@ int main(int argc, char *argv[])
         printf(" expr + expr\n");
         printf("\tThe result of the expression is the sum of the two expressions.\n");
         printf(" expr - expr\n");
-        printf("\tThe result of the expression is the difference of the two expressions.\n\n");
+        printf("\tThe result of the expression is the difference of the two expressions.\n");
         printf(" expr * expr\n");
-        printf("\tThe result of the expression is the sum of the two expressions.\n\n");
+        printf("\tThe result of the expression is the sum of the two expressions.\n");
         printf(" expr / expr\n");
-        printf("\tThe result of the expression is the quotient of the two  expressions.\n\n");
+        printf("\tThe result of the expression is the quotient of the two  expressions.\n");
         printf(" expr %% expr\n");
-        printf("\tThe result of the expression is the \"remainder\n\n");
+        printf("\tThe result of the expression is the \"remainder\n");
         printf(" expr ^ expr\n");
-        printf("\tThe result of the expression is the value of the first raised to the second, provided second number should be an integer \n\n");
+        printf("\tThe result of the expression is the value of the first raised to the second, provided second number should be an integer \n");
         printf(" S(x)\n");
         printf("\tThe sine of x, x is in radians.\n");
         printf(" C(x)\n");
         printf("\tThe cosine of x, x is in radians.\n");
         printf(" T(x)\n");
         printf("\tThe tangent of x, x is in radians.\n");
+        printf(" e(x)\n");
+        printf("\tThe result of the expression is e^x, provided x should be an integer \n");
         exit(0);
     }
     if (argc > 2)
@@ -112,20 +115,36 @@ int main(int argc, char *argv[])
     scanf("%d", &scale);
     getchar();
     char line[LINE_LEN];
+    FILE *fp = fopen("history.txt", "a");
     Number *result;
     printf(">>> ");
+
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    fprintf(fp, "%02d-%02d-%d %02d:%02d:%02d\n\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    fprintf(fp, "Scale: %d\n\n", scale);
+    fprintf(fp, ">>> ");
     while (readline(line, LINE_LEN))
     {
 
         insert0AtStartAndAfterBrac(line);
-        // printf("%s", line);
+        fprintf(fp, "%s\n", line);
         result = infix(line);
         if (result != NULL)
+        {
             displayNumber(result);
+            writeNumberInfile(result, fp);
+        }
         else
+        {
             printf("Incorrect expression\n");
+            fprintf(fp, "Incorrect expression\n");
+        }
         printf("\n>>> ");
+        fprintf(fp, "\n>>> ");
     }
+    fprintf(fp, "--------------------------------------------------------------------------------------------------------------\n");
+    fclose(fp);
 }
 // 2^3+5%2/2*4^3
 // Sequence of executable files: 1.try  2.pro 3.tryPower

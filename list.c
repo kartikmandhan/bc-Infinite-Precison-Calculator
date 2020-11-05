@@ -116,6 +116,32 @@ void displayNumber(Number *num)
     }
     printf("\n");
 }
+void writeNumberInfile(Number *num, FILE *fp)
+{
+    removeZeros(num);
+    node *p = num->head;
+    if (num->sign == MINUS)
+    {
+        fprintf(fp, "-");
+    }
+    int posDecimal = length(*num) - num->dec;
+    if (posDecimal < 0)
+    {
+        fprintf(fp, "0.");
+        for (int i = posDecimal; i < 0; i++)
+        {
+            fprintf(fp, "0");
+        }
+    }
+    for (int i = 0; i < length(*num); i++)
+    {
+        if (i == posDecimal)
+            fprintf(fp, ".");
+        fprintf(fp, "%d", p->num);
+        p = p->next;
+    }
+    fprintf(fp, "\n");
+}
 void insertAtBegining(Number *num, int no)
 {
     if (no >= 0 && no <= 9)
