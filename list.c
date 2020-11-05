@@ -918,11 +918,18 @@ Number *power(Number *n1, Number *n2)
 }
 Number *Sin(Number *n1)
 {
+    int minus = 0;
     Number *ans = (Number *)malloc(sizeof(Number));
     Number *angleInRadians = (Number *)malloc(sizeof(Number));
     initNumber(ans);
     initNumber(angleInRadians);
+    if (n1->sign == MINUS)
+        minus = 1;
+    // this minus variable is created to remember sign of n1
     angleInRadians = modulus(n1, twoPI());
+    // After modulus call gets finished sign of n1 is changed to PLUS inside modulus
+    if (minus)
+        angleInRadians->sign = MINUS;
     double angle = NumberToDouble(angleInRadians);
     double value = sinl(angle);
     ans = doubletoNumber(value);
@@ -931,11 +938,18 @@ Number *Sin(Number *n1)
 }
 Number *Cos(Number *n1)
 {
+    int minus = 0;
     Number *ans = (Number *)malloc(sizeof(Number));
     Number *angleInRadians = (Number *)malloc(sizeof(Number));
     initNumber(ans);
     initNumber(angleInRadians);
+    if (n1->sign == MINUS)
+        minus = 1;
+    // this minus variable is created to remember sign of n1
     angleInRadians = modulus(n1, twoPI());
+    // After modulus call gets finished sign of n1 is changed to PLUS inside modulus
+    if (minus)
+        angleInRadians->sign = MINUS;
     double angle = NumberToDouble(angleInRadians);
     double value = cosl(angle);
     ans = doubletoNumber(value);
@@ -944,11 +958,18 @@ Number *Cos(Number *n1)
 }
 Number *Tan(Number *n1)
 {
+    int minus = 0;
     Number *ans = (Number *)malloc(sizeof(Number));
     Number *angleInRadians = (Number *)malloc(sizeof(Number));
     initNumber(ans);
     initNumber(angleInRadians);
+    if (n1->sign == MINUS)
+        minus = 1;
+    // this minus variable is created to remember sign of n1
     angleInRadians = modulus(n1, twoPI());
+    // After modulus call gets finished sign of n1 is changed to PLUS inside modulus
+    if (minus)
+        angleInRadians->sign = MINUS;
     double angle = NumberToDouble(angleInRadians);
     double value = tanl(angle);
     ans = doubletoNumber(value);

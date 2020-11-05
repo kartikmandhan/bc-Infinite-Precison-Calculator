@@ -423,79 +423,140 @@ Number *infix(char *expression)
                 case 'S':
                     trigo = 1;
                     cpop(&operatorStack);
-                    // printf("here");
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        if (t.num->head->num == 0)
+                        {
+                            int negateNumber = 0;
+                            t = getToken(expression, &reset);
+                            // here the token will be '-' or '+' only
+                            if (t.op == '-')
+                                negateNumber = 1;
+                            else if (t.op == '+')
+                                negateNumber = 0;
+                            // the token recieved now will be the angle in radians
+                            t = getToken(expression, &reset);
+                            if (t.type == OPERAND)
+                            {
+                                if (negateNumber)
+                                    t.num->sign = MINUS;
+                            }
+                            else
+                            {
+                                printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                return NULL;
+                            }
+                        }
                         push(&operandStack, t.num);
 
                         t = getToken(expression, &reset);
-                        // if(t.type==OPERATOR && t.op==")"){
-
-                        // }
+                        if (t.op != ')')
+                        {
+                            printf("Evaluation of expression inside Trignometry is not Supported\n");
+                            return NULL;
+                        }
                         OBcount--; //count of opening bracket
                     }
                     else
                     {
                         return NULL;
                     }
-                    // printNumber(*t.num);
                     a = pop(&operandStack);
                     answer = Sin(a);
                     push(&operandStack, answer);
-                    // printf("%d", cisempty(&cs));
-                    // printNumber(*answer);
-                    //cpush(&cs, curr_op);
                     break;
                 case 'C':
                     trigo = 1;
                     cpop(&operatorStack);
-                    // printf("here");
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        if (t.num->head->num == 0)
+                        {
+                            int negateNumber = 0;
+                            t = getToken(expression, &reset);
+                            // here the token will be '-' or '+' only
+                            if (t.op == '-')
+                                negateNumber = 1;
+                            else if (t.op == '+')
+                                negateNumber = 0;
+                            // the token recieved now will be the angle in radians
+                            t = getToken(expression, &reset);
+                            if (t.type == OPERAND)
+                            {
+                                if (negateNumber)
+                                    t.num->sign = MINUS;
+                            }
+                            else
+                            {
+                                printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                return NULL;
+                            }
+                        }
                         push(&operandStack, t.num);
 
                         t = getToken(expression, &reset);
-                        // if(t.type==OPERATOR && t.op==")"){
-
-                        // }
+                        if (t.op != ')')
+                        {
+                            printf("Evaluation of expression inside Trignometry is not Supported\n");
+                            return NULL;
+                        }
                         OBcount--; //count of opening bracket
                     }
                     else
                     {
                         return NULL;
                     }
-                    // printNumber(*t.num);
                     a = pop(&operandStack);
                     answer = Cos(a);
                     push(&operandStack, answer);
-                    //cpush(&cs, curr_op);
                     break;
                 case 'T':
                     trigo = 1;
                     cpop(&operatorStack);
-                    // printf("here");
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        if (t.num->head->num == 0)
+                        {
+                            int negateNumber = 0;
+                            t = getToken(expression, &reset);
+                            // here the token will be '-' or '+' only
+                            if (t.op == '-')
+                                negateNumber = 1;
+                            else if (t.op == '+')
+                                negateNumber = 0;
+                            // the token recieved now will be the angle in radians
+                            t = getToken(expression, &reset);
+                            if (t.type == OPERAND)
+                            {
+                                if (negateNumber)
+                                    t.num->sign = MINUS;
+                            }
+                            else
+                            {
+                                printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                return NULL;
+                            }
+                        }
                         push(&operandStack, t.num);
 
                         t = getToken(expression, &reset);
-                        // if(t.type==OPERATOR && t.op==")"){
-
-                        // }
+                        if (t.op != ')')
+                        {
+                            printf("Evaluation of expression inside Trignometry is not Supported\n");
+                            return NULL;
+                        }
                         OBcount--; //count of opening bracket
                     }
                     else
                     {
                         return NULL;
                     }
-                    // printNumber(*t.num);
                     a = pop(&operandStack);
                     answer = Tan(a);
                     push(&operandStack, answer);
-                    //cpush(&cs, curr_op);
                     break;
                 default:
                     break;
