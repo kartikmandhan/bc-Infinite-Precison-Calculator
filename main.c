@@ -118,7 +118,6 @@ int main(int argc, char *argv[])
     FILE *fp = fopen("history.txt", "a");
     Number *result;
     printf(">>> ");
-
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     fprintf(fp, "%02d-%02d-%d %02d:%02d:%02d\n\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);

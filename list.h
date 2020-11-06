@@ -26,6 +26,8 @@ void insertAtBegining(Number *num, int no);
 void makeLengthEqual(Number *a, Number *b);
 void makeDecimalEqual(Number *a, Number *b);
 int compareEqual(Number a, Number b);
+double NumberToDouble(Number *n1);
+Number *doubletoNumber(double a);
 int isNumber0(Number *n1);
 void duplicateNumber(Number *n1, Number *n2);
 Number *TheNumberE();
@@ -41,4 +43,6 @@ Number *Sin(Number *n1);
 Number *Cos(Number *n1);
 Number *Tan(Number *n1);
 Number *exponent(Number *n1);
+Number *sqRoot(Number *n1);
+Number *Len(Number *n1);
 #endif

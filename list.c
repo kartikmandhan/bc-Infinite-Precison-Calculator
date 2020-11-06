@@ -42,6 +42,57 @@ void appendDigit(Number *n, char ch)
     }
     return;
 }
+double NumberToDouble(Number *n1)
+{
+    double ans;
+    char temp[1024];
+    node *p = n1->head;
+    int i;
+    int posDecimal = length(*n1) - n1->dec;
+    for (i = 0; p != NULL; i++)
+    {
+        if (i == posDecimal)
+        {
+            temp[i] = '.';
+            i++;
+        }
+        temp[i] = p->num + '0';
+        p = p->next;
+    }
+    temp[i] = '\0';
+    sscanf(temp, "%lf", &ans);
+    if (n1->sign == MINUS)
+    {
+        ans = -1 * ans;
+    }
+    return ans;
+}
+Number *doubletoNumber(double a)
+{
+    Number *ans = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    char temp[1024];
+    sprintf(temp, "%lf", a);
+    int i = 0;
+    if (temp[i] == '-')
+    {
+        ans->sign = MINUS;
+        i++;
+    }
+    for (; temp[i] != '\0'; i++)
+    {
+        if (temp[i] == '.')
+        {
+            ans->dec = strlen(temp) - i - 1;
+        }
+        else
+        {
+            appendDigit(ans, temp[i]);
+        }
+    }
+    return ans;
+}
+// this length function is needed by other functions for their working
 int length(Number n)
 {
     node *p = n.head;
@@ -52,6 +103,30 @@ int length(Number n)
         p = p->next;
     }
     return len;
+}
+void intToNumber(int d, Number *n1)
+{
+    char temp[256];
+    sprintf(temp, "%d", d);
+    int i = 0;
+    if (temp[i] == '-')
+    {
+        n1->sign = MINUS;
+        i++;
+    }
+    for (; temp[i] != '\0'; i++)
+    {
+        appendDigit(n1, temp[i]);
+    }
+}
+// This Length function serves as a operation
+Number *Len(Number *n1)
+{
+    Number *ans = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    int len = length(*n1);
+    intToNumber(len, ans);
+    return ans;
 }
 void removeZeros(Number *n1)
 {
@@ -803,56 +878,7 @@ Number *twoPI()
     twopi->dec = 30;
     return twopi;
 }
-double NumberToDouble(Number *n1)
-{
-    double ans;
-    char temp[1024];
-    node *p = n1->head;
-    int i;
-    int posDecimal = length(*n1) - n1->dec;
-    for (i = 0; p != NULL; i++)
-    {
-        if (i == posDecimal)
-        {
-            temp[i] = '.';
-            i++;
-        }
-        temp[i] = p->num + '0';
-        p = p->next;
-    }
-    temp[i] = '\0';
-    sscanf(temp, "%lf", &ans);
-    if (n1->sign == MINUS)
-    {
-        ans = -1 * ans;
-    }
-    return ans;
-}
-Number *doubletoNumber(double a)
-{
-    Number *ans = (Number *)malloc(sizeof(Number));
-    initNumber(ans);
-    char temp[1024];
-    sprintf(temp, "%lf", a);
-    int i = 0;
-    if (temp[i] == '-')
-    {
-        ans->sign = MINUS;
-        i++;
-    }
-    for (int i = 0; temp[i] != '\0'; i++)
-    {
-        if (temp[i] == '.')
-        {
-            ans->dec = strlen(temp) - i - 1;
-        }
-        else
-        {
-            appendDigit(ans, temp[i]);
-        }
-    }
-    return ans;
-}
+
 Number *power(Number *n1, Number *n2)
 {
     // if(n2->dec)
@@ -1016,6 +1042,31 @@ Number *exponent(Number *n1)
 {
     return power(TheNumberE(), n1);
 }
+/*Number *Factorial(Number *n1)
+{
+    Number *ans = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    insertAtBegining(ans, 1);
+    Number *one = (Number *)malloc(sizeof(Number));
+    initNumber(one);
+    insertAtBegining(one, 1);
+    node *p=n1->tail;
+    while (!isNumber0(n1))
+    {
+        ans = multiply(ans, n1);
+        p->num
+    }
+    return ans;
+}*/
+Number *sqRoot(Number *n1)
+{
+    Number *ans = (Number *)malloc(sizeof(Number));
+    initNumber(ans);
+    double temp = NumberToDouble(n1);
+    temp = sqrt(temp);
+    ans = doubletoNumber(temp);
+    return ans;
+}
 /*
 int main()
 {
@@ -1027,8 +1078,8 @@ int main()
     initNumber(n2);
     initNumber(n3);
     // insertAtBegining(n1, 3);
-    appendDigit(n1, '3');
-    // appendDigit(n1, '0');
+    // appendDigit(n1, '1');
+    // appendDigit(n1, '6');
     // appendDigit(n1, '0');
     // appendDigit(n1, '0');
     // appendDigit(n1, '5');
@@ -1055,12 +1106,12 @@ int main()
     // appendDigit(n2, '3');
     // displayNumber(n1);
 
-    displayNumber(TheNumberE());
+    // displayNumber(TheNumberE());
+    intToNumber(300, n1);
     displayNumber(n1);
-    n3 = exponent(n1);
+    n3 = doubletoNumber(4.90001);
     displayNumber(n3);
     // printf("%d", length(*n1));
-    printf("%lf", exp(3));
     // displayNumber(n3);
     // n3 = add(n1, n2);
     // displayNumber(n3);
