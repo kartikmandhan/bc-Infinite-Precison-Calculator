@@ -442,35 +442,46 @@ Number *infix(char *expression)
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        int negateNumber = 0, numberIsZero = 0;
                         if (t.num->head->num == 0)
                         {
-                            int negateNumber = 0;
                             t = getToken(expression, &reset);
-                            // here the token will be '-' or '+' only
+                            // here the token will be '-' or '+' or ')' only
+
                             if (t.op == '-')
                                 negateNumber = 1;
                             else if (t.op == '+')
                                 negateNumber = 0;
-                            // the token recieved now will be the value to be raised
-                            t = getToken(expression, &reset);
-                            if (t.type == OPERAND)
+                            else if (t.op == ')')
+                                // angle to be computed is 0 itself
+                                numberIsZero = 1;
+                            if (!numberIsZero)
                             {
-                                if (negateNumber)
-                                    t.num->sign = MINUS;
-                            }
-                            else
-                            {
-                                printf("Evaluation of expression inside Length function is not Supported\n");
-                                return NULL;
+                                // then number is entered with a + or - sign as we insert 0 between '(' and + or - while reading the string
+                                // the token recieved now will be the angle in radians
+                                t = getToken(expression, &reset);
+                                if (t.type == OPERAND)
+                                {
+                                    if (negateNumber)
+                                        t.num->sign = MINUS;
+                                }
+                                else
+                                {
+                                    printf("Evaluation of expression inside Length function is not Supported\n");
+                                    return NULL;
+                                }
                             }
                         }
                         push(&operandStack, t.num);
 
-                        t = getToken(expression, &reset);
-                        if (t.op != ')')
+                        if (!numberIsZero)
                         {
-                            printf("Evaluation of expression inside Length function is not Supported\n");
-                            return NULL;
+                            t = getToken(expression, &reset);
+                            if (t.op != ')')
+                            {
+                                printf("Evaluation of expression inside Length function is not Supported\n");
+                                return NULL;
+                            }
                         }
                         OBcount--; //count of opening bracket
                     }
@@ -489,37 +500,46 @@ Number *infix(char *expression)
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        int negateNumber = 0, numberIsZero = 0;
                         if (t.num->head->num == 0)
                         {
-                            int negateNumber = 0;
                             t = getToken(expression, &reset);
                             // here the token will be '-' or '+' only
                             if (t.op == '-')
                                 negateNumber = 1;
                             else if (t.op == '+')
                                 negateNumber = 0;
-                            // the token recieved now will be the number
-                            t = getToken(expression, &reset);
-                            if (t.type == OPERAND)
+                            else if (t.op == ')')
+                                // angle to be computed is 0 itself
+                                numberIsZero = 1;
+                            if (!numberIsZero)
                             {
-                                if (negateNumber)
+                                // the token recieved now will be the number
+                                t = getToken(expression, &reset);
+                                if (t.type == OPERAND)
                                 {
-                                    printf("Cannot compute Squareroot of Negative Number\n");
+                                    if (negateNumber)
+                                    {
+                                        printf("Cannot compute Squareroot of Negative Number\n");
+                                        return NULL;
+                                    }
+                                }
+                                else
+                                {
+                                    printf("Evaluation of expression inside Square Root is not Supported\n");
                                     return NULL;
                                 }
                             }
-                            else
+                        }
+                        push(&operandStack, t.num);
+                        if (!numberIsZero)
+                        {
+                            t = getToken(expression, &reset);
+                            if (t.op != ')')
                             {
                                 printf("Evaluation of expression inside Square Root is not Supported\n");
                                 return NULL;
                             }
-                        }
-                        push(&operandStack, t.num);
-                        t = getToken(expression, &reset);
-                        if (t.op != ')')
-                        {
-                            printf("Evaluation of expression inside Square Root is not Supported\n");
-                            return NULL;
                         }
                         OBcount--; //count of opening bracket
                     }
@@ -532,41 +552,51 @@ Number *infix(char *expression)
                     push(&operandStack, answer);
                     break;
                 case 'e':
-                    // flag variable to mark that these special types of function is computed
                     unary_operator = 1;
                     cpop(&operatorStack);
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        int negateNumber = 0, numberIsZero = 0;
                         if (t.num->head->num == 0)
                         {
-                            int negateNumber = 0;
                             t = getToken(expression, &reset);
-                            // here the token will be '-' or '+' only
+                            // here the token will be '-' or '+' or ')' only
+
                             if (t.op == '-')
                                 negateNumber = 1;
                             else if (t.op == '+')
                                 negateNumber = 0;
-                            // the token recieved now will be the value to be raised
-                            t = getToken(expression, &reset);
-                            if (t.type == OPERAND)
+                            else if (t.op == ')')
+                                // angle to be computed is 0 itself
+                                numberIsZero = 1;
+                            if (!numberIsZero)
                             {
-                                if (negateNumber)
-                                    t.num->sign = MINUS;
-                            }
-                            else
-                            {
-                                printf("Evaluation of expression inside Exponent is not Supported\n");
-                                return NULL;
+                                // then number is entered with a + or - sign as we insert 0 between '(' and + or - while reading the string
+                                // the token recieved now will be the Number to be raised
+                                t = getToken(expression, &reset);
+                                if (t.type == OPERAND)
+                                {
+                                    if (negateNumber)
+                                        t.num->sign = MINUS;
+                                }
+                                else
+                                {
+                                    printf("Evaluation of expression inside Exponent is not Supported\n");
+                                    return NULL;
+                                }
                             }
                         }
                         push(&operandStack, t.num);
 
-                        t = getToken(expression, &reset);
-                        if (t.op != ')')
+                        if (!numberIsZero)
                         {
-                            printf("Evaluation of expression inside Exponent is not Supported\n");
-                            return NULL;
+                            t = getToken(expression, &reset);
+                            if (t.op != ')')
+                            {
+                                printf("Evaluation of expression inside Exponent is not Supported\n");
+                                return NULL;
+                            }
                         }
                         OBcount--; //count of opening bracket
                     }
@@ -585,35 +615,46 @@ Number *infix(char *expression)
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        int negateNumber = 0, numberIsZero = 0;
                         if (t.num->head->num == 0)
                         {
-                            int negateNumber = 0;
                             t = getToken(expression, &reset);
-                            // here the token will be '-' or '+' only
+                            // here the token will be '-' or '+' or ')' only
+
                             if (t.op == '-')
                                 negateNumber = 1;
                             else if (t.op == '+')
                                 negateNumber = 0;
-                            // the token recieved now will be the angle in radians
-                            t = getToken(expression, &reset);
-                            if (t.type == OPERAND)
+                            else if (t.op == ')')
+                                // angle to be computed is 0 itself
+                                numberIsZero = 1;
+                            if (!numberIsZero)
                             {
-                                if (negateNumber)
-                                    t.num->sign = MINUS;
-                            }
-                            else
-                            {
-                                printf("Evaluation of expression inside Trignometry is not Supported\n");
-                                return NULL;
+                                // then number is entered with a + or - sign as we insert 0 between '(' and + or - while reading the string
+                                // the token recieved now will be the angle in radians
+                                t = getToken(expression, &reset);
+                                if (t.type == OPERAND)
+                                {
+                                    if (negateNumber)
+                                        t.num->sign = MINUS;
+                                }
+                                else
+                                {
+                                    printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                    return NULL;
+                                }
                             }
                         }
                         push(&operandStack, t.num);
 
-                        t = getToken(expression, &reset);
-                        if (t.op != ')')
+                        if (!numberIsZero)
                         {
-                            printf("Evaluation of expression inside Trignometry is not Supported\n");
-                            return NULL;
+                            t = getToken(expression, &reset);
+                            if (t.op != ')')
+                            {
+                                printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                return NULL;
+                            }
                         }
                         OBcount--; //count of opening bracket
                     }
@@ -632,35 +673,46 @@ Number *infix(char *expression)
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        int negateNumber = 0, numberIsZero = 0;
                         if (t.num->head->num == 0)
                         {
-                            int negateNumber = 0;
                             t = getToken(expression, &reset);
-                            // here the token will be '-' or '+' only
+                            // here the token will be '-' or '+' or ')' only
+
                             if (t.op == '-')
                                 negateNumber = 1;
                             else if (t.op == '+')
                                 negateNumber = 0;
-                            // the token recieved now will be the angle in radians
-                            t = getToken(expression, &reset);
-                            if (t.type == OPERAND)
+                            else if (t.op == ')')
+                                // angle to be computed is 0 itself
+                                numberIsZero = 1;
+                            if (!numberIsZero)
                             {
-                                if (negateNumber)
-                                    t.num->sign = MINUS;
-                            }
-                            else
-                            {
-                                printf("Evaluation of expression inside Trignometry is not Supported\n");
-                                return NULL;
+                                // then number is entered with a + or - sign as we insert 0 between '(' and + or - while reading the string
+                                // the token recieved now will be the angle in radians
+                                t = getToken(expression, &reset);
+                                if (t.type == OPERAND)
+                                {
+                                    if (negateNumber)
+                                        t.num->sign = MINUS;
+                                }
+                                else
+                                {
+                                    printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                    return NULL;
+                                }
                             }
                         }
                         push(&operandStack, t.num);
 
-                        t = getToken(expression, &reset);
-                        if (t.op != ')')
+                        if (!numberIsZero)
                         {
-                            printf("Evaluation of expression inside Trignometry is not Supported\n");
-                            return NULL;
+                            t = getToken(expression, &reset);
+                            if (t.op != ')')
+                            {
+                                printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                return NULL;
+                            }
                         }
                         OBcount--; //count of opening bracket
                     }
@@ -679,35 +731,46 @@ Number *infix(char *expression)
                     t = getToken(expression, &reset);
                     if (t.type == OPERAND)
                     {
+                        int negateNumber = 0, numberIsZero = 0;
                         if (t.num->head->num == 0)
                         {
-                            int negateNumber = 0;
                             t = getToken(expression, &reset);
-                            // here the token will be '-' or '+' only
+                            // here the token will be '-' or '+' or ')' only
+
                             if (t.op == '-')
                                 negateNumber = 1;
                             else if (t.op == '+')
                                 negateNumber = 0;
-                            // the token recieved now will be the angle in radians
-                            t = getToken(expression, &reset);
-                            if (t.type == OPERAND)
+                            else if (t.op == ')')
+                                // angle to be computed is 0 itself
+                                numberIsZero = 1;
+                            if (!numberIsZero)
                             {
-                                if (negateNumber)
-                                    t.num->sign = MINUS;
-                            }
-                            else
-                            {
-                                printf("Evaluation of expression inside Trignometry is not Supported\n");
-                                return NULL;
+                                // then number is entered with a + or - sign as we insert 0 between '(' and + or - while reading the string
+                                // the token recieved now will be the angle in radians
+                                t = getToken(expression, &reset);
+                                if (t.type == OPERAND)
+                                {
+                                    if (negateNumber)
+                                        t.num->sign = MINUS;
+                                }
+                                else
+                                {
+                                    printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                    return NULL;
+                                }
                             }
                         }
                         push(&operandStack, t.num);
 
-                        t = getToken(expression, &reset);
-                        if (t.op != ')')
+                        if (!numberIsZero)
                         {
-                            printf("Evaluation of expression inside Trignometry is not Supported\n");
-                            return NULL;
+                            t = getToken(expression, &reset);
+                            if (t.op != ')')
+                            {
+                                printf("Evaluation of expression inside Trignometry is not Supported\n");
+                                return NULL;
+                            }
                         }
                         OBcount--; //count of opening bracket
                     }

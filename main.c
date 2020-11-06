@@ -77,14 +77,13 @@ void insert0AtStartAndAfterBrac(char *line)
 }
 int main(int argc, char *argv[])
 {
-    printf("This project is inspired from the bc command line calculator in Linux\n");
+    printf("This project is inspired from the bc command line calculator in Linux,including additional Features\n");
     printf("This is free software with ABSOLUTELY NO WARRANTY.\n");
     if (argc == 2 && !strcmp(argv[1], "-h"))
     {
         printf("Usage: project [option]\n");
         printf("\t-h\t--help\t\tprint this help and exit\n");
         printf("\t-v\t--version\tprints information about version of this software\n");
-        printf("\t-i\t--integers\tprints answers in integer format only\n");
         printf(" expr + expr\n");
         printf("\tThe result of the expression is the sum of the two expressions.\n");
         printf(" expr - expr\n");
@@ -104,7 +103,18 @@ int main(int argc, char *argv[])
         printf(" T(x)\n");
         printf("\tThe tangent of x, x is in radians.\n");
         printf(" e(x)\n");
-        printf("\tThe result of the expression is e^x, provided x should be an integer \n");
+        printf("\tThe result is e^x, provided x should be an integer \n");
+        printf(" R(x)\n");
+        printf("\tThe result is sqrt(x), provided x should be an non negative integer \n");
+        printf(" L(x)\n");
+        printf("\tThe result is length of the Number\n");
+        exit(0);
+    }
+    else if (argc == 2 && !strcmp(argv[1], "-v"))
+    {
+        printf("VERSION:-\n");
+        printf("Mybc 1.0.0\n");
+        printf("This is free software with ABSOLUTELY NO WARRANTY.\n");
         exit(0);
     }
     if (argc > 2)
@@ -125,7 +135,6 @@ int main(int argc, char *argv[])
     fprintf(fp, ">>> ");
     while (readline(line, LINE_LEN))
     {
-
         insert0AtStartAndAfterBrac(line);
         fprintf(fp, "%s\n", line);
         result = infix(line);

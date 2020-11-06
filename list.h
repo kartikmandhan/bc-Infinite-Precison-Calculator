@@ -25,7 +25,7 @@ void removeZeros(Number *n1);
 void insertAtBegining(Number *num, int no);
 void makeLengthEqual(Number *a, Number *b);
 void makeDecimalEqual(Number *a, Number *b);
-int compareEqual(Number a, Number b);
+int compareMagnitude(Number a, Number b);
 double NumberToDouble(Number *n1);
 Number *doubletoNumber(double a);
 int isNumber0(Number *n1);

@@ -12,6 +12,7 @@ void initNumber(Number *n)
     n->sign = PLUS;
     n->dec = 0;
 }
+// this function takes char 0 to 9 and appends them into Number
 void appendDigit(Number *n, char ch)
 {
     if (ch >= '0' && ch <= '9')
@@ -42,6 +43,7 @@ void appendDigit(Number *n, char ch)
     }
     return;
 }
+// this function converts Number to double
 double NumberToDouble(Number *n1)
 {
     double ans;
@@ -67,6 +69,7 @@ double NumberToDouble(Number *n1)
     }
     return ans;
 }
+// this function converts double to Number
 Number *doubletoNumber(double a)
 {
     Number *ans = (Number *)malloc(sizeof(Number));
@@ -104,6 +107,7 @@ int length(Number n)
     }
     return len;
 }
+// this function converts int to Number
 void intToNumber(int d, Number *n1)
 {
     char temp[256];
@@ -128,6 +132,7 @@ Number *Len(Number *n1)
     intToNumber(len, ans);
     return ans;
 }
+// this function removes zeros from starting as well as after decimal point 003.1400 =>3.14
 void removeZeros(Number *n1)
 {
     node *p = n1->head;
@@ -165,6 +170,7 @@ void removeZeros(Number *n1)
     }
     return;
 }
+// this function displays Number on stdout
 void displayNumber(Number *num)
 {
     removeZeros(num);
@@ -191,6 +197,7 @@ void displayNumber(Number *num)
     }
     printf("\n");
 }
+// this function prints the Number in the File
 void writeNumberInfile(Number *num, FILE *fp)
 {
     removeZeros(num);
@@ -217,6 +224,7 @@ void writeNumberInfile(Number *num, FILE *fp)
     }
     fprintf(fp, "\n");
 }
+// This function inserts insert int 0 to 9 at head position
 void insertAtBegining(Number *num, int no)
 {
     if (no >= 0 && no <= 9)
@@ -240,6 +248,7 @@ void insertAtBegining(Number *num, int no)
         num->head = new_node;
     }
 }
+// Makes length of two Number equal by prepending Zeroes at the start
 void makeLengthEqual(Number *a, Number *b)
 {
     int diff = length(*a) - length(*b);
@@ -259,6 +268,7 @@ void makeLengthEqual(Number *a, Number *b)
         }
     }
 }
+// Makes length of two Number equal by appending Zeroes after decimal point
 void makeDecimalEqual(Number *a, Number *b)
 {
     int diff = a->dec - b->dec;
@@ -280,24 +290,25 @@ void makeDecimalEqual(Number *a, Number *b)
         }
     }
 }
-int compareEqual(Number a, Number b)
+// Return 1 |n1|>|n2|, -1 for |n1|<|n2|, 0 for |n1|=|n2|
+int compareMagnitude(Number n1, Number n2)
 {
-    makeLengthEqual(&a, &b);
-    makeDecimalEqual(&a, &b);
-    // if some error try swapping positions ofabove two functions
-    // 3.1234 3.12=>3.1234 003.1200
+    makeDecimalEqual(&n1, &n2);
+    makeLengthEqual(&n1, &n2);
+    // 3.1234, 3.12=>3.1234, 3.1200
     node *p, *q;
     int len;
     int i;
-    len = length(a);
-    p = a.head;
-    q = b.head;
+    // as length of both the numbers is same at this point
+    len = length(n1);
+    p = n1.head;
+    q = n2.head;
     for (i = 1; i <= len; i++)
     {
         if (p->num > q->num)
-            return 1; //i.e. Number a greater than Number b.
+            return 1; //i.e. Number n1 greater than Number n2.
         else if (p->num < q->num)
-            return -1; //i.e. a is less than b.
+            return -1; //i.e. n1 is less than n2.
         p = p->next;
         q = q->next;
     }
@@ -337,7 +348,7 @@ Number *sub(Number *n1, Number *n2)
             int diff = 0, borrow = 0, dig_a, dig_b, len = length(*n1);
             node *tail_a = n1->tail;
             node *tail_b = n2->tail;
-            if (compareEqual(*n1, *n2) == 1)
+            if (compareMagnitude(*n1, *n2) == 1)
             {
                 // n1 is greater than n2
                 for (int i = 0; i < len; i++)
@@ -362,7 +373,7 @@ Number *sub(Number *n1, Number *n2)
                     tail_b = tail_b->prev;
                 }
             }
-            else if (compareEqual(*n1, *n2) == -1)
+            else if (compareMagnitude(*n1, *n2) == -1)
             {
                 for (int i = 0; i < len; i++)
                 {
@@ -478,7 +489,7 @@ Number *add(Number *n1, Number *n2)
     // free(n1);
     return ans;
 }
-
+// Returns 1(True) if number is 0, else returns 0(False)
 int isNumber0(Number *n1)
 {
     node *p = n1->head;
@@ -659,6 +670,7 @@ Number *divide(Number *n1, Number *n2)
         c->head = c->tail = NULL;
     }
 }
+// 1/3 =>0, 4/3=>1,it returns quotient with no decimal points
 Number *floordivide(Number *n1, Number *n2)
 {
     if (isNumber0(n2))
@@ -848,7 +860,7 @@ Number *modulus(Number *n1, Number *n2)
         c->head = c->tail = NULL;
     }
 }
-// duplicate n2 to n1
+// copy n2 into n1
 void duplicateNumber(Number *n1, Number *n2)
 {
     n1->sign = n2->sign;
@@ -862,7 +874,7 @@ void duplicateNumber(Number *n1, Number *n2)
         p = p->next;
     }
 }
-
+// this return value of 2pi accurate upto 30 decimal places
 Number *twoPI()
 {
     Number *twopi = (Number *)malloc(sizeof(Number));
@@ -1023,6 +1035,7 @@ Number *Tan(Number *n1)
     free(angleInRadians);
     return ans;
 }
+// this return value of e accurate upto 20 decimal places
 Number *TheNumberE()
 {
     Number *e = (Number *)malloc(sizeof(Number));
@@ -1038,6 +1051,7 @@ Number *TheNumberE()
     e->dec = 20;
     return e;
 }
+// evaluates e^x
 Number *exponent(Number *n1)
 {
     return power(TheNumberE(), n1);
@@ -1078,21 +1092,24 @@ int main()
     initNumber(n2);
     initNumber(n3);
     // insertAtBegining(n1, 3);
-    // appendDigit(n1, '1');
+    appendDigit(n1, '2');
     // appendDigit(n1, '6');
-    // appendDigit(n1, '0');
+    appendDigit(n1, '0');
     // appendDigit(n1, '0');
     // appendDigit(n1, '5');
     // appendDigit(n1, '4');
     // n2->sign = MINUS;
     // n1->sign = MINUS;
-    n2->dec = 2;
+    // n2->dec = 2;
+    // n2->dec = 4;
+    // n2->sign = MINUS;
+    // n1->sign = MINUS;
     // n1 = twoPI();
 
     appendDigit(n2, '2');
     appendDigit(n2, '0');
-    appendDigit(n2, '5');
-    appendDigit(n2, '4');
+    // appendDigit(n2, '5');
+    // appendDigit(n2, '4');
     // appendDigit(n2, '5');
     // appendDigit(n2, '9');
     // appendDigit(n2, '9');
@@ -1107,10 +1124,12 @@ int main()
     // displayNumber(n1);
 
     // displayNumber(TheNumberE());
-    intToNumber(300, n1);
+    // intToNumber(300, n1);
     displayNumber(n1);
-    n3 = doubletoNumber(4.90001);
-    displayNumber(n3);
+    displayNumber(n2);
+    int t = compareMagnitude(*n2, *n1);
+    printf("%d", t);
+    // displayNumber(n3);
     // printf("%d", length(*n1));
     // displayNumber(n3);
     // n3 = add(n1, n2);
