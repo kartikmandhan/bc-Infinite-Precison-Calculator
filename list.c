@@ -489,7 +489,7 @@ Number *add(Number *n1, Number *n2)
     // free(n1);
     return ans;
 }
-// Returns 1(True) if number is 0, else returns 0(False)
+// Returns 1(True) if Number is 0, else returns 0(False)
 int isNumber0(Number *n1)
 {
     node *p = n1->head;
@@ -507,7 +507,6 @@ Number *multiply(Number *n1, Number *n2)
 {
     Number *ans = malloc(sizeof(Number));
     initNumber(ans);
-
     if (isNumber0(n1) || isNumber0(n2))
     {
         insertAtBegining(ans, 0);
@@ -525,16 +524,20 @@ Number *multiply(Number *n1, Number *n2)
     }
     int len_a = length(*n1);
     int len_b = length(*n2);
-    int max_len = len_a > len_b ? 2 * len_a : 2 * len_b;
+    int max_len = len_a > len_b ? len_a : len_b;
+    // printf("len1:%d\n", max_len);
+    int twice_max_len = max_len * 2;
     int i, j, p, q, multCarry, addCarry;
     node *tail_n1, *tail_n2 = n2->tail;
-    int *tempMult = calloc(max_len, sizeof(int));
-
+    // twice of max len to be on safe side,as 99*10=990,i.e 3 digits but 99*99=9801,i.e 4 digits
+    int *tempMult = calloc(twice_max_len, sizeof(int));
+    // calloc makes all the array elements 0
     for (i = 0; i < len_b; i++)
     {
         tail_n1 = n1->tail;
         addCarry = 0, multCarry = 0;
-        for (j = max_len - i - 1; j >= 0; j--)
+        // for (j = twice_max_len - i - 1; j > 0; j--)
+        for (j = twice_max_len - i - 1; j > max_len - 2; j--)
         {
             if (tail_n1 && tail_n2)
             {
@@ -553,18 +556,24 @@ Number *multiply(Number *n1, Number *n2)
             }
         }
         tempMult[j] += addCarry + multCarry;
+        // max_len at the end will keep track of how many digits to be inserted
+        // so that 0s at the start are not unnecessary filled in our number
+        max_len--;
+        // printf("len:%d\n", max_len);
         tail_n2 = tail_n2->prev;
-        // for (int i = 0; i < max_len; i++)
+        // for (int i = 0; i < twice_max_len; i++)
         // {
         //     printf("%d ", tempMult[i]);
         // }
         // printf("\n");
     }
-    for (int i = max_len - 1; i >= 0; i--)
+    // for (int i = twice_max_len - 1; i >= 0; i--)
+    for (int i = twice_max_len - 1; i >= max_len && i >= 0; i--)
     {
         insertAtBegining(ans, tempMult[i]);
     }
     ans->dec = n1->dec + n2->dec;
+    free(tempMult);
     return ans;
 }
 
@@ -1056,7 +1065,7 @@ Number *exponent(Number *n1)
 {
     return power(TheNumberE(), n1);
 }
-/*Number *Factorial(Number *n1)
+Number *Factorial(Number *n1)
 {
     Number *ans = (Number *)malloc(sizeof(Number));
     initNumber(ans);
@@ -1064,14 +1073,16 @@ Number *exponent(Number *n1)
     Number *one = (Number *)malloc(sizeof(Number));
     initNumber(one);
     insertAtBegining(one, 1);
-    node *p=n1->tail;
+    node *p = n1->tail;
+    // int a=intToNumber()
     while (!isNumber0(n1))
     {
         ans = multiply(ans, n1);
-        p->num
+        n1 = sub(n1, one);
     }
+    free(one);
     return ans;
-}*/
+}
 Number *sqRoot(Number *n1)
 {
     Number *ans = (Number *)malloc(sizeof(Number));
@@ -1092,10 +1103,10 @@ int main()
     initNumber(n2);
     initNumber(n3);
     // insertAtBegining(n1, 3);
-    appendDigit(n1, '2');
+    // appendDigit(n1, '2');
     // appendDigit(n1, '6');
-    appendDigit(n1, '0');
-    // appendDigit(n1, '0');
+    appendDigit(n1, '9');
+    // appendDigit(n1, '2');
     // appendDigit(n1, '5');
     // appendDigit(n1, '4');
     // n2->sign = MINUS;
@@ -1106,9 +1117,9 @@ int main()
     // n1->sign = MINUS;
     // n1 = twoPI();
 
-    appendDigit(n2, '2');
-    appendDigit(n2, '0');
-    // appendDigit(n2, '5');
+    appendDigit(n2, '6');
+    appendDigit(n2, '3');
+    appendDigit(n2, '5');
     // appendDigit(n2, '4');
     // appendDigit(n2, '5');
     // appendDigit(n2, '9');
@@ -1127,8 +1138,11 @@ int main()
     // intToNumber(300, n1);
     displayNumber(n1);
     displayNumber(n2);
-    int t = compareMagnitude(*n2, *n1);
-    printf("%d", t);
+    // n3 = multiply(n1, n2);
+    n3 = Factorial(n1);
+    displayNumber(n3);
+    // int t = compareMagnitude(*n2, *n1);
+    // printf("%d", t);
     // displayNumber(n3);
     // printf("%d", length(*n1));
     // displayNumber(n3);
