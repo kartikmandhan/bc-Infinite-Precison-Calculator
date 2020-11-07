@@ -77,13 +77,15 @@ void insert0AtStartAndAfterBrac(char *line)
 }
 int main(int argc, char *argv[])
 {
-    printf("This project is inspired from the bc command line calculator in Linux,including additional Features\n");
-    printf("This is free software with ABSOLUTELY NO WARRANTY.\n");
+    char line[LINE_LEN];
+    Number *result;
+
     if (argc == 2 && !strcmp(argv[1], "-h"))
     {
-        printf("Usage: project [option]\n");
+        printf("Usage: ./project [option] [ file ] \n");
         printf("\t-h\t--help\t\tprint this help and exit\n");
         printf("\t-v\t--version\tprints information about version of this software\n");
+        printf("\t<filename>\treads the expression from the text file and displays the result of each expression on the stdout\n");
         printf(" expr + expr\n");
         printf("\tThe result of the expression is the sum of the two expressions.\n");
         printf(" expr - expr\n");
@@ -93,7 +95,7 @@ int main(int argc, char *argv[])
         printf(" expr / expr\n");
         printf("\tThe result of the expression is the quotient of the two  expressions.\n");
         printf(" expr %% expr\n");
-        printf("\tThe result of the expression is the \"remainder\n");
+        printf("\tThe result of the expression is the remainder\n");
         printf(" expr ^ expr\n");
         printf("\tThe result of the expression is the value of the first raised to the second, provided second number should be an integer \n");
         printf(" S(x)\n");
@@ -117,16 +119,49 @@ int main(int argc, char *argv[])
         printf("This is free software with ABSOLUTELY NO WARRANTY.\n");
         exit(0);
     }
+    else if (argc == 2)
+    {
+        FILE *fp1 = fopen(argv[1], "r");
+        if (fp1 == NULL)
+        {
+            printf("File %s is unavailable\n", argv[1]);
+            exit(0);
+        }
+        while (fgets(line, LINE_LEN, fp1))
+        {
+            // since fgets also keeps the newline character in the string,lets remove it
+            int len = strlen(line);
+            if (line[len - 1] == '\n')
+                line[len - 1] = '\0';
+            printf(">>> ");
+            printf("%s\n", line);
+            insert0AtStartAndAfterBrac(line);
+            result = infix(line);
+            if (result != NULL)
+            {
+                displayNumber(result);
+                printf("\n");
+                // writeNumberInfile(result, fp);
+            }
+            else
+            {
+                printf("Incorrect expression\n");
+            }
+        }
+        fclose(fp1);
+        exit(0);
+    }
     if (argc > 2)
     {
         printf("Usage: project [option]\n");
     }
+    printf("This project is inspired from the bc command line calculator in Linux,including additional Features\n");
+    printf("This is free software with ABSOLUTELY NO WARRANTY.\n\n");
     printf("Enter the scale for calculations:\n");
     scanf("%d", &scale);
-    getchar();
-    char line[LINE_LEN];
+    getchar(); //eats up the \n character entered after scale
+
     FILE *fp = fopen("history.txt", "a");
-    Number *result;
     printf(">>> ");
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
