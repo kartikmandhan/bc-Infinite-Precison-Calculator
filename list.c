@@ -669,7 +669,6 @@ Number *divide(Number *n1, Number *n2)
                 return q;
             }
             q->dec++;
-            // printf("%d\n", q->dec);
             appendDigit(dividend, '0');
         }
         i = 9;
@@ -899,10 +898,29 @@ Number *twoPI()
     twopi->dec = 30;
     return twopi;
 }
-
+int NumberToint(Number *n1)
+{
+    int ans;
+    char temp[1024];
+    node *p = n1->head;
+    int i;
+    for (i = 0; p != NULL; i++)
+    {
+        temp[i] = p->num + '0';
+        p = p->next;
+    }
+    temp[i] = '\0';
+    sscanf(temp, "%d", &ans);
+    if (n1->sign == MINUS)
+    {
+        ans = -1 * ans;
+    }
+    return ans;
+}
 Number *power(Number *n1, Number *n2)
 {
     // if(n2->dec)
+
     int reciprocate = 0, answerNegative = 0, countDecimal = n1->dec;
     if (n2->sign == MINUS)
     {
@@ -977,9 +995,9 @@ Number *power(Number *n1, Number *n2)
         ans = divide(one, ans);
     if (answerNegative)
         ans->sign = MINUS;
-    if (countDecimal)
+    if (countDecimal > ans->dec)
     {
-        int multiplicativeFactor = (int)NumberToDouble(copyn2);
+        int multiplicativeFactor = NumberToint(copyn2);
         ans->dec = countDecimal * multiplicativeFactor;
     }
     return ans;
@@ -1094,25 +1112,7 @@ Number *sqRoot(Number *n1)
     ans = doubletoNumber(temp);
     return ans;
 }
-int NumberToint(Number *n1)
-{
-    int ans;
-    char temp[1024];
-    node *p = n1->head;
-    int i;
-    for (i = 0; p != NULL; i++)
-    {
-        temp[i] = p->num + '0';
-        p = p->next;
-    }
-    temp[i] = '\0';
-    sscanf(temp, "%d", &ans);
-    if (n1->sign == MINUS)
-    {
-        ans = -1 * ans;
-    }
-    return ans;
-}
+
 void setScale(Number *n1)
 {
     if (n1->sign == PLUS && n1->dec == 0)
@@ -1134,13 +1134,13 @@ int main()
     // insertAtBegining(n1, 3);
     // appendDigit(n1, '2');
     // appendDigit(n1, '6');
-    appendDigit(n1, '9');
-    // appendDigit(n1, '2');
+    appendDigit(n1, '5');
+    appendDigit(n1, '2');
     // appendDigit(n1, '5');
     // appendDigit(n1, '4');
     // n2->sign = MINUS;
     // n1->sign = MINUS;
-    // n2->dec = 2;
+    n2->dec = 2;
     // n2->dec = 4;
     // n2->sign = MINUS;
     // n1->sign = MINUS;
@@ -1168,12 +1168,12 @@ int main()
     displayNumber(n1);
     displayNumber(n2);
     // n3 = multiply(n1, n2);
-    // n3 = Factorial(n1);
-    // displayNumber(n3);
-    int n = NumberToint(n1);
-    printf("%d", n);
-    n = NumberToint(n2);
-    printf("%d", n);
+    n3 = power(n2, n1);
+    displayNumber(n3);
+    // int n = NumberToint(n1);
+    // printf("%d", n);
+    // n = NumberToint(n2);
+    // printf("%d", n);
     // int t = compareMagnitude(*n2, *n1);
     // printf("%d", t);
     // displayNumber(n3);

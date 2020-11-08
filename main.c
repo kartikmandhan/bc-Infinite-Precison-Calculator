@@ -160,6 +160,7 @@ int main(int argc, char *argv[])
         printf("Usage: project [option]\n");
     }
     printf("This project is inspired from the bc command line calculator in Linux,including additional Features\n");
+    printf("Copyright 2020 @Kartik Naresh Mandhan (111903039)\n");
     printf("This is free software with ABSOLUTELY NO WARRANTY.\n\n");
     // printf("Enter the scale for calculations:\n");
     // scanf("%d", &scale);
