@@ -69,6 +69,8 @@ token getToken(char *expr, int *reset)
             case 'e':
             case 'R':
             case 'L':
+            case 'F':
+            case 's':
 
                 nextstate = OP;
                 currstate = nextstate;
@@ -135,6 +137,8 @@ token getToken(char *expr, int *reset)
             case 'e':
             case 'R':
             case 'L':
+            case 'F':
+            case 's':
                 t.type = OPERAND;
                 t.num = new_number;
                 nextstate = OP;
@@ -210,6 +214,8 @@ token getToken(char *expr, int *reset)
             case 'e':
             case 'R':
             case 'L':
+            case 'F':
+            case 's':
                 t.type = OPERATOR;
                 t.op = expr[i - 1];
                 nextstate = OP;
@@ -286,6 +292,8 @@ token getToken(char *expr, int *reset)
             case 'e':
             case 'R':
             case 'L':
+            case 'F':
+            case 's':
                 t.type = OPERAND;
                 t.num = new_number;
                 nextstate = OP;
@@ -353,6 +361,8 @@ int precedence(char op)
     case 'R': //squareRoot
     case 'L': //Length of Number
     case 'e': //e^x
+    case 'F':
+    case 's': //scale
         // despite lowest precedence we evaluate them first
         // thier precedence is made lower so that we dont enter that precedence while loop
         return -1;
@@ -435,6 +445,100 @@ Number *infix(char *expression)
                 // for starting situation we dont hav prev_op,hence if stack is empty then dont do all this
                 switch (prev_op)
                 {
+                case 's':
+                    unary_operator = 1;
+                    // remove s from operator stack
+                    cpop(&operatorStack);
+                    // numer will be recieved here
+                    t = getToken(expression, &reset);
+                    if (t.type == OPERAND)
+                    {
+                        push(&operandStack, t.num);
+                        t = getToken(expression, &reset);
+                        if (t.op != ')')
+                        {
+                            printf("Invalid input for setting scale\n");
+                            return NULL;
+                        }
+                        OBcount--; //count of opening bracket
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                    a = pop(&operandStack);
+                    if (a->dec != 0)
+                    {
+                        printf("Cannot set scale to a decimal number\n");
+                        return NULL;
+                    }
+                    setScale(a);
+                    // we dont want to compute any further
+                    return a;
+                    break;
+                case 'F':
+                    unary_operator = 1;
+                    cpop(&operatorStack);
+                    t = getToken(expression, &reset);
+                    if (t.type == OPERAND)
+                    {
+                        int negateNumber = 0, numberIsZero = 0;
+                        if (t.num->head->num == 0)
+                        {
+                            t = getToken(expression, &reset);
+                            // here the token will be '-' or '+' mostly,  or ')' when number is 0 only
+                            if (t.op == '-')
+                                negateNumber = 1;
+                            else if (t.op == '+')
+                                negateNumber = 0;
+                            else if (t.op == ')')
+                                // angle to be computed is 0 itself
+                                numberIsZero = 1;
+                            if (!numberIsZero)
+                            {
+                                // the token recieved now will be the number
+                                t = getToken(expression, &reset);
+                                if (t.type == OPERAND)
+                                {
+                                    if (negateNumber)
+                                    {
+                                        printf("Cannot compute factorial of Negative Number\n");
+                                        return NULL;
+                                    }
+                                }
+                                else
+                                {
+                                    printf("Evaluation of expression inside factorial is not Supported\n");
+                                    return NULL;
+                                }
+                            }
+                        }
+                        push(&operandStack, t.num);
+                        if (!numberIsZero)
+                        {
+                            // this will be a ) when number!=0
+                            t = getToken(expression, &reset);
+                            if (t.op != ')')
+                            {
+                                printf("Evaluation of expression inside factorial is not Supported\n");
+                                return NULL;
+                            }
+                        }
+                        OBcount--; //count of opening bracket
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                    a = pop(&operandStack);
+                    if (a->dec != 0)
+                    {
+                        printf("Cannot compute factorial of Decimal Number\n");
+                        return NULL;
+                    }
+                    answer = Factorial(a);
+                    push(&operandStack, answer);
+                    break;
                 case 'L':
                     // flag variable to mark that these special types of function is computed
                     unary_operator = 1;
@@ -520,13 +624,13 @@ Number *infix(char *expression)
                                 {
                                     if (negateNumber)
                                     {
-                                        printf("Cannot compute Squareroot of Negative Number\n");
+                                        printf("Cannot compute square root of Negative Number\n");
                                         return NULL;
                                     }
                                 }
                                 else
                                 {
-                                    printf("Evaluation of expression inside Square Root is not Supported\n");
+                                    printf("Evaluation of expression inside square root is not Supported\n");
                                     return NULL;
                                 }
                             }
@@ -537,7 +641,7 @@ Number *infix(char *expression)
                             t = getToken(expression, &reset);
                             if (t.op != ')')
                             {
-                                printf("Evaluation of expression inside Square Root is not Supported\n");
+                                printf("Evaluation of expression inside square root is not Supported\n");
                                 return NULL;
                             }
                         }

@@ -45,4 +45,6 @@ Number *Tan(Number *n1);
 Number *exponent(Number *n1);
 Number *sqRoot(Number *n1);
 Number *Len(Number *n1);
+Number *Factorial(Number *n1);
+void setScale(Number *n1);
 #endif

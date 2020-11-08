@@ -110,6 +110,10 @@ int main(int argc, char *argv[])
         printf("\tThe result is sqrt(x), provided x should be an non negative integer \n");
         printf(" L(x)\n");
         printf("\tThe result is length of the Number\n");
+        printf(" F(x)\n");
+        printf("\tThe result of the expression is the factorial of given input value\n\n");
+        printf(" s(x)\n");
+        printf("\t Set the scale of calculator to a specific integer\n");
         exit(0);
     }
     else if (argc == 2 && !strcmp(argv[1], "-v"))
@@ -157,9 +161,9 @@ int main(int argc, char *argv[])
     }
     printf("This project is inspired from the bc command line calculator in Linux,including additional Features\n");
     printf("This is free software with ABSOLUTELY NO WARRANTY.\n\n");
-    printf("Enter the scale for calculations:\n");
-    scanf("%d", &scale);
-    getchar(); //eats up the \n character entered after scale
+    // printf("Enter the scale for calculations:\n");
+    // scanf("%d", &scale);
+    // getchar(); //eats up the \n character entered after scale
 
     FILE *fp = fopen("history.txt", "a");
     printf(">>> ");

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-// #define scale 30
+// int scale = 30;
 extern int scale;
 #include <string.h>
 #include <math.h>
@@ -1073,8 +1073,10 @@ Number *Factorial(Number *n1)
     Number *one = (Number *)malloc(sizeof(Number));
     initNumber(one);
     insertAtBegining(one, 1);
-    node *p = n1->tail;
-    // int a=intToNumber()
+    if (isNumber0(n1))
+    {
+        return one;
+    }
     while (!isNumber0(n1))
     {
         ans = multiply(ans, n1);
@@ -1091,6 +1093,33 @@ Number *sqRoot(Number *n1)
     temp = sqrt(temp);
     ans = doubletoNumber(temp);
     return ans;
+}
+int NumberToint(Number *n1)
+{
+    int ans;
+    char temp[1024];
+    node *p = n1->head;
+    int i;
+    for (i = 0; p != NULL; i++)
+    {
+        temp[i] = p->num + '0';
+        p = p->next;
+    }
+    temp[i] = '\0';
+    sscanf(temp, "%d", &ans);
+    if (n1->sign == MINUS)
+    {
+        ans = -1 * ans;
+    }
+    return ans;
+}
+void setScale(Number *n1)
+{
+    if (n1->sign == PLUS && n1->dec == 0)
+    {
+        scale = NumberToint(n1);
+    }
+    printf("Scale is set to: ");
 }
 /*
 int main()
@@ -1139,8 +1168,12 @@ int main()
     displayNumber(n1);
     displayNumber(n2);
     // n3 = multiply(n1, n2);
-    n3 = Factorial(n1);
-    displayNumber(n3);
+    // n3 = Factorial(n1);
+    // displayNumber(n3);
+    int n = NumberToint(n1);
+    printf("%d", n);
+    n = NumberToint(n2);
+    printf("%d", n);
     // int t = compareMagnitude(*n2, *n1);
     // printf("%d", t);
     // displayNumber(n3);
