@@ -2,7 +2,7 @@
 #define LIST_H_
 
 // List.h code
-
+#include <stdio.h>
 #define PLUS 1
 #define MINUS -1
 

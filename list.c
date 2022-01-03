@@ -666,6 +666,12 @@ Number *divide(Number *n1, Number *n2)
             // add zeroes to end of dividend 10/11=>100/11 and increase count of decimal by 1
             if (q->dec == scale)
             {
+                free(c->head);
+                free(c);
+                free(dividend);
+                // dividend and tempans point to same memory
+                // free(tmpAns);
+                free(pro);
                 return q;
             }
             q->dec++;
@@ -763,6 +769,10 @@ Number *floordivide(Number *n1, Number *n2)
         }
         else
         {
+            free(c);
+            free(dividend);
+            // free(tmpAns);
+            free(pro);
             return q;
         }
         i = 9;
@@ -858,6 +868,11 @@ Number *modulus(Number *n1, Number *n2)
         else
         {
             // set decimal count of the answer as the max of the two digit's decimal
+            free(c->head);
+            free(c);
+            free(q->head);
+            free(q);
+            free(pro);
             tmpAns->dec = k;
             return tmpAns;
         }
@@ -1000,6 +1015,9 @@ Number *power(Number *n1, Number *n2)
         int multiplicativeFactor = NumberToint(copyn2);
         ans->dec = countDecimal * multiplicativeFactor;
     }
+    free(one);
+    free(copyn2);
+    free(two);
     return ans;
 }
 Number *Sin(Number *n1)
