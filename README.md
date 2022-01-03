@@ -15,7 +15,7 @@
     * Trignometric Functions like Sine, Cosine, Tangent, input angle is considered in radian units
     * Length of the Number
     * exponential i.e e(x)
-    * Factorial of a Number (try 3 digit numbers only)  try 1000! on Google calculator it says infinite :)
+    * Factorial of a Number (try 3 digit numbers only) . _Try 1000! on Google calculator it says infinite :)_
   ---
   * All expressions are evaluated according to their **_precedence_**.
   * _paranthesis_ '()' can be used which is having higher precedence.  
@@ -26,25 +26,25 @@
   
 ### Execution Instruction :-  
 
- * Clone the repository on your machine.
+ * Clone the repository on your machine. 
  * Open **Terminal** and _change directory_ to the project directory.  
- * Type command ' **make** ' which will compile the required files and generate _executable file_.  
+ * Type command ' **make** ' which will compile the required files and generate _executable file_.   (Linux/Mac recommended)
  * Then type the command ' **./project** '. 
  * Run `./project -h` to get a list of all operations that it can perform
  * `./project <filename>`  will take input from the file and output it on the terminal, example: `./project test.txt`
  * An enter key on empty line exits the program
   ---
   ### DataStructures used :-
-  **A Doubly Linked List of struct node with Head and tail pointer**
+**A Doubly Linked List of struct node with Head and tail pointer**
   <img src="./Structs.png" />
-  **For tokenizing the Input String, I had used Finite State Machine**
 
-  <br>
+**For tokenizing the Input String, I had used Finite State Machine**
   <img src="./stateDiagram.png" />
-  <br>
 
 
   
   ## Screenshots of the working Application :-
   <img src="./screenshots/2.png" />
   <img src="./screenshots/1.png" />
+  
+  **Pull Requests are Welcomed, Giving A Star is appreciated**
